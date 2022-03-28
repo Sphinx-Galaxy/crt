@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/addButton.png</file>
+        <file>icon/deleteButton.png</file>
+        <file>icon/PSU_disconnected.png</file>
+        <file>icon/PSU_off.png</file>
+        <file>icon/PSU_on.png</file>
+        <file>icon/startButton_active.png</file>
+        <file>icon/startButton.png</file>
+        <file>icon/stopButton_active.png</file>
+        <file>icon/stopButton.png</file>
+        <file>icon/ETH_connected.png</file>
+        <file>icon/ETH_disconnected.png</file>
+        <file>icon/ETH_event.png</file>
+        <file>icon/ETH_waiting.png</file>
+        <file>icon/task_active.png</file>
+        <file>icon/task_inactive.png</file>
+    </qresource>
+</RCC>
