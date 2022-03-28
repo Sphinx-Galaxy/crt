@@ -28,8 +28,6 @@ SOURCES += \
     main.cpp \
     src/Components/Component.cpp \
     src/Components/EthernetClient.cpp \
-    src/Components/IndicatorBox.cpp \
-    src/Components/IndicatorIcon.cpp \
     src/Components/LXIClient.cpp \
     src/Components/Labjack.cpp \
     src/Components/LabjackChannel.cpp \
@@ -37,9 +35,10 @@ SOURCES += \
     src/Components/OSCChannel.cpp \
     src/Components/PSU.cpp \
     src/Components/PSUChannel.cpp \
-    src/Dialog/SpecAddDialog.cpp \
-    src/Dialog/SpecSignalDialog.cpp \
-    src/Dialog/TaskDialog.cpp \
+    src/GraphElements/ComponentDialog.cpp \
+    src/GraphElements/IndicatorBox.cpp \
+    src/GraphElements/IndicatorIcon.cpp \
+    src/GraphElements/SignalDialog.cpp \
     src/Manager/EventManager.cpp \
     src/Manager/FileManager.cpp \
     src/Manager/RunManager.cpp \
@@ -65,8 +64,6 @@ HEADERS += \
     LJM_Utilities.h \
     src/Components/Component.h \
     src/Components/EthernetClient.h \
-    src/Components/IndicatorBox.h \
-    src/Components/IndicatorIcon.h \
     src/Components/LXIClient.h \
     src/Components/Labjack.h \
     src/Components/LabjackChannel.h \
@@ -74,9 +71,10 @@ HEADERS += \
     src/Components/OSCChannel.h \
     src/Components/PSU.h \
     src/Components/PSUChannel.h \
-    src/Dialog/SpecAddDialog.h \
-    src/Dialog/SpecSignalDialog.h \
-    src/Dialog/TaskDialog.h \
+    src/GraphElements/ComponentDialog.h \
+    src/GraphElements/IndicatorBox.h \
+    src/GraphElements/IndicatorIcon.h \
+    src/GraphElements/SignalDialog.h \
     src/Manager/EventManager.h \
     src/Manager/FileManager.h \
     src/Manager/RunManager.h \

@@ -16,7 +16,7 @@ class QVBoxLayout;
 
 #include "src/Configuration/ConfigManager.h"
 #include "src/Manager/RunManager.h"
-#include "src/Dialog/SpecAddDialog.h"
+#include "src/GraphElements/ComponentDialog.h"
 
 #include <QWidget>
 

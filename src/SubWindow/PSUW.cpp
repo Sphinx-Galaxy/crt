@@ -1,6 +1,6 @@
 #include "PSUW.h"
 
-#include "src/Components/IndicatorBox.h"
+#include "src/GraphElements/IndicatorBox.h"
 #include "src/Components/PSU.h"
 #include "src/Plot/PSUPlot.h"
 

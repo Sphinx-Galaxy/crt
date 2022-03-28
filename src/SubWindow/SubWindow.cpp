@@ -1,6 +1,6 @@
 #include "SubWindow.h"
 
-#include "src/Dialog/SpecSignalDialog.h"
+#include "src/GraphElements/SignalDialog.h"
 
 #include <QCheckBox>
 #include <QPushButton>
