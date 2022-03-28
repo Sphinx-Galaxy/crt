@@ -39,13 +39,13 @@ public slots:
     /* Event / Signal management */
     void show_signal_dialog();
     void add_signal();
-    void delete_signal(struct RegisteredSignal * reg);
+    void delete_signal(RegisteredSignal* regSig);
 
 protected slots:
     //Configuration
     virtual void post_init(); //For all the signals
 
-    void trigger_signal_list();
+    void trigger_signal_vec();
 
     virtual void create_layout() = 0;
 
@@ -66,35 +66,18 @@ protected:
     /* Event and signal management */
     RunManager* runManager;
     EventManager* eventManager;
-    QVector<RegisteredSignal*> signal_list;
+    QVector<RegisteredSignal*> regSig_vec;
     SpecSignalDialog* signalDialog = nullptr;
 
     Component* component;
     QThread* thread;
 
-    QString get_signal_list();
-    bool is_signal_in_list(RegisteredSignal* reg);
+    QString get_signal_string();
 };
 
-inline void SubWindow::trigger_signal_list()
+inline void SubWindow::trigger_signal_vec()
 {
-    eventManager->call_trigger(signal_list);
-}
-
-inline bool SubWindow::is_signal_in_list(RegisteredSignal* reg)
-{
-    bool in_list = false;
-
-    foreach (RegisteredSignal* signal, signal_list)
-    {
-        if(reg == signal)
-        {
-            in_list = true;
-            break;
-        }
-    }
-
-    return in_list;
+    eventManager->call_trigger(regSig_vec);
 }
 
 #endif // SUBWINDOW_H

@@ -1,42 +1,45 @@
 #include "EventManager.h"
 
-void EventManager::add_signal(const QString& name, SignalType st, SubWindow* sub, void (SubWindow::*sp)(void))
+void EventManager::add_signal(const QString& name,
+                              SignalType st,
+                              SubWindow* sub,
+                              void (SubWindow::*sp)(void))
 {
-    signal_list.push_back(new RegisteredSignal{name, st, sub, sp});
+    regSig_vec.push_back(new RegisteredSignal{name, st, sub, sp});
     emit signal_added();
 }
 
 void EventManager::delete_signal(SubWindow* sub, void (SubWindow::*sp)(void))
 {
-    for(int i = 0; i < signal_list.size(); i++)
+    for(int i = 0; i < regSig_vec.size(); ++i)
     {
-        if(signal_list[i]->sub == sub && signal_list[i]->sp == sp)
+        if(regSig_vec[i]->sub == sub && regSig_vec[i]->sp == sp)
         {
-            emit signal_deleted(signal_list[i]);
+            emit signal_deleted(regSig_vec[i]);
 
-            delete signal_list[i];
-            signal_list.remove(i);
+            delete regSig_vec[i];
+            regSig_vec.remove(i);
 
             break;
         }
     }
 }
 
-void EventManager::call_trigger(const QVector<RegisteredSignal*>& signal_list)
+void EventManager::call_trigger(const QVector<RegisteredSignal*>& regSig_vec)
 {
-    foreach (RegisteredSignal* signal, signal_list)
+    foreach(RegisteredSignal* regSig, regSig_vec)
     {
-            emit ((signal->sub)->*(signal->sp))();
+            emit ((regSig->sub)->*(regSig->sp))();
     }
 }
 
-void EventManager::call_trigger(enum SignalType st, const QVector<RegisteredSignal*>& signal_list)
+void EventManager::call_trigger(enum SignalType st, const QVector<RegisteredSignal*>& regSig_vec)
 {
-    foreach (RegisteredSignal* signal, signal_list)
+    foreach(RegisteredSignal* regSig, regSig_vec)
     {
-        if(signal->st == st)
+        if(regSig->st == st)
         {
-            emit ((signal->sub)->*(signal->sp))();
+            emit ((regSig->sub)->*(regSig->sp))();
         }
     }
 }
@@ -44,13 +47,15 @@ void EventManager::call_trigger(enum SignalType st, const QVector<RegisteredSign
 RegisteredSignal* EventManager::get_signal(const QString& name) const
 {
     if(name == "")
-        return nullptr;
-
-    foreach (RegisteredSignal* signal, signal_list)
     {
-        if(signal->name == name)
+        return nullptr;
+    }
+
+    foreach(RegisteredSignal* regSig, regSig_vec)
+    {
+        if(regSig->name == name)
         {
-            return signal;
+            return regSig;
         }
     }
 

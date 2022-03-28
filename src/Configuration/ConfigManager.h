@@ -12,7 +12,7 @@
 
 #include <QWidget>
 
-struct section_position
+struct SectionPosition
 {
     QString sectionName;
     int pos;
@@ -24,13 +24,13 @@ Q_OBJECT
 
 public:
     ConfigManager() {}
-    ConfigManager(QString &configName)
+    ConfigManager(const QString& configName)
         : configName(configName) {}
 
     virtual ~ConfigManager() {}
 
     void set_new_config(const QString& configName);
-    bool get_config_section(QString name, QString& section);
+    bool get_config_section(const QString& name, QString& sectionBuffer);
 
     void append_content(const QString& section, const QString& content);
 
@@ -43,24 +43,14 @@ signals:
     void saving_config();
 
 private:
-    QVector<section_position> section_positions;
+    QVector<SectionPosition> section_position_vec;
     QString configName = ".cfg";
     QString content;
 
     static const QString sectionStart, sectionEnd;
 
-    bool parse_config();
+    bool parse_config(const QString& filename);
     bool is_defined(const QString& name, int pos);
 };
-
-inline void ConfigManager::set_new_config(const QString& configName)
-{
-    this->configName = configName;
-}
-
-inline void ConfigManager::append_content(const QString& section, const QString& content)
-{
-    this->content += sectionStart + " " + section + "\n" + content + sectionEnd + "\n\n";
-}
 
 #endif // CONFIGMANAGER_H

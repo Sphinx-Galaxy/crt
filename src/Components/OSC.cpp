@@ -13,7 +13,7 @@ OSC::OSC(RunManager * runManager, const QString &config)
 }
 
 OSC::OSC(RunManager * runManager, const QString &m_element_name, const QString &address, const QString &vendor, uint channel_max)
-    : Component(m_element_name, runManager), address(address), channel_max(channel_max) {
+    : Component(runManager, m_element_name), address(address), channel_max(channel_max) {
 
     this->elementName = m_element_name;
 }
@@ -26,7 +26,7 @@ OSC::~OSC() {
 }
 
 void OSC::set_config() {
-    config_entry_list.clear();
+    clear_config();
 
     set_value("name", elementName);
     set_value("address", address);

@@ -33,8 +33,11 @@ SubWindow::SubWindow(RunManager* runManager, Component* component)
 
 SubWindow::~SubWindow()
 {
+    /* Delete signals */
     eventManager->delete_signal(this, &SubWindow::signal_start_log);
     eventManager->delete_signal(this, &SubWindow::signal_stop_log);
+
+    delete signalDialog;
 
     thread->quit();
 
@@ -45,56 +48,54 @@ SubWindow::~SubWindow()
 QString SubWindow::get_config()
 {
     component->set_config();
-    component->set_value("signal", get_signal_list());
+    component->set_value("signal", get_signal_string());
 
     return component->get_config();
 }
 
-QString SubWindow::get_signal_list()
+QString SubWindow::get_signal_string()
 {
-    QString list = "";
+    QString res = "";
 
-    foreach (RegisteredSignal* signal, signal_list)
+    foreach(RegisteredSignal* regSig, regSig_vec)
     {
-        list += signal->name + ";";
+        res += regSig->name + ";";
     }
 
-    return list;
+    return res;
 }
 
 void SubWindow::post_init()
 {
     QString signal_names = component->get_value("signal");
 
-    if(signal_names.count(";") != signal_list.size())
+    if(signal_names.count(";") != regSig_vec.size())
     {
-        foreach (RegisteredSignal* signal, eventManager->get_signal_list())
+        foreach (RegisteredSignal* regSig, eventManager->get_signal_vec())
         {
-            if(signal_names.contains(signal->name) && !is_signal_in_list(signal))
+            if(signal_names.contains(regSig->name) && !regSig_vec.contains(regSig))
             {
-                signal_list.push_back(signal);
+                regSig_vec.push_back(regSig);
             }
         }
     }
 }
 
+/* The dialog has to be re-created as the signals might change over time */
 void SubWindow::show_signal_dialog()
 {
-    if(signalDialog != nullptr)
-    {
-        delete signalDialog;
-    }
+    delete signalDialog;
 
     signalDialog = new SpecSignalDialog;
 
     /* Check every signal thats already listed */
-    foreach (RegisteredSignal* signal, eventManager->get_signal_list())
+    foreach (RegisteredSignal* regSig, eventManager->get_signal_vec())
     {
-        if(signal->st != SignalType::start_log && signal->st != SignalType::stop_log)
+        if(regSig->st != SignalType::start_log && regSig->st != SignalType::stop_log)
         {
-            is_signal_in_list(signal) ?
-                        signalDialog->add_entry(true, signal) :
-                        signalDialog->add_entry(false, signal);
+            regSig_vec.contains(regSig) ?
+                        signalDialog->add_entry(true, regSig) :
+                        signalDialog->add_entry(false, regSig);
         }
     }
 
@@ -106,22 +107,16 @@ void SubWindow::show_signal_dialog()
 
 void SubWindow::add_signal()
 {
-    foreach (RegisteredSignalBox signal, signalDialog->get_registeredSignal_list())
+    foreach (RegisteredSignalBox regSigBox, signalDialog->get_regSigBox_vec())
     {
-        if(signal.checkBox->isChecked())
+        if(regSigBox.checkBox->isChecked() && !regSig_vec.contains(regSigBox.regSig))
         {
-            signal_list.push_back(signal.sig);
+            regSig_vec.push_back(regSigBox.regSig);
         }
     }
 }
 
-void SubWindow::delete_signal(RegisteredSignal* reg)
+void SubWindow::delete_signal(RegisteredSignal* regSig)
 {
-    for(QVector<RegisteredSignal*>::iterator it = signal_list.begin(); it != signal_list.end(); it++)
-    {
-        if((*it) == reg) {
-            signal_list.erase(it);
-            break;
-        }
-    }
+    regSig_vec.removeAll(regSig);
 }

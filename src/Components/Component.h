@@ -21,7 +21,6 @@ class Component : public QObject, public ConfigElement
 Q_OBJECT
 
 public:
-    Component(const QString& elementName, RunManager* runManager);
     Component(RunManager* runManager, const QString& config);
     virtual ~Component() override;
 

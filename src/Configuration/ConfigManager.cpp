@@ -2,109 +2,35 @@
 
 #include <QFile>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QMutex>
 #include <QTextStream>
 
 const QString ConfigManager::sectionStart = "Section";
 const QString ConfigManager::sectionEnd = "EndSection";
-
-bool ConfigManager::get_config_section(QString name, QString& section)
-{
-    QFile file(configName);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream config(&file);
-    QString line;
-    int pos = 0;
-    bool section_start_found = false;
-    bool section_end_found = false;
-
-    while(!config.atEnd() && !section_end_found)
-    {
-        line = config.readLine();
-
-        if(!section_start_found && line.contains(sectionStart))
-        {
-            if(line.contains(name))
-            {
-                if(!is_defined(name, pos))
-                {
-                    section_start_found = true;
-                }
-                else
-                {
-                    pos++;
-                }
-            }
-        }
-
-        if(section_start_found) {
-            if(line.contains(sectionEnd))
-            {
-                section_end_found = true;
-            }
-            else
-            {
-                section += line + "\n";
-            }
-        }
-    }
-
-    file.close();
-
-    return (section_start_found && section_end_found);
-}
-
-/* Check how many sections of the same kind have already been found */
-bool ConfigManager::is_defined(const QString& name, int pos)
-{
-    bool section_exists = false;
-    bool section_defined = false;
-
-    for(QVector<section_position>::iterator i = section_positions.begin(); i != section_positions.end(); i++)
-    {
-        if((*i).sectionName == name)
-        {
-            section_exists = true;
-
-            if((*i).pos < pos)
-            {
-                (*i).pos++;
-                section_defined = false;
-                break;
-            }
-            else
-            {
-                section_defined = true;
-                break;
-            }
-        }
-    }
-
-    //Add if the section is not yet in the list
-    if(!section_exists)
-    {
-        section_positions.push_back({name, pos});
-        section_defined = false;
-    }
-
-    return section_defined;
-}
 
 void ConfigManager::load_config()
 {
     /* Show dialog */
     QString tmp = QFileDialog::getOpenFileName(this, tr("Open File"), "./");
 
+    /* Validate config */
     if(QFileInfo::exists(tmp))
     {
-        configName = tmp;
+        if(parse_config(tmp))
+        {
+            configName = tmp;
+            section_position_vec.clear();
 
-        //Validate config
-        assert(parse_config());
-
-        section_positions.clear();
-
-        emit loading_config();
+            emit loading_config();
+        }
+        else
+        {
+            QMessageBox info(QMessageBox::Icon::Critical,
+                             "Loading Config",
+                             "Could not parse config file");
+            info.exec();
+        }
     }
 }
 
@@ -132,19 +58,22 @@ void ConfigManager::save_config()
     }
 }
 
-bool ConfigManager::parse_config()
+bool ConfigManager::parse_config(const QString& filename)
 {
     bool ok = true;
     bool in_section = false;
 
-    QFile file(configName);
+    QFile file(filename);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         return false;
+    }
 
     QTextStream in(&file);
     QString line;
 
-    while(!in.atEnd()) {
+    while(!in.atEnd())
+    {
         line = in.readLine();
 
         if(line != "\n" && line.size() > 0)
@@ -192,4 +121,101 @@ bool ConfigManager::parse_config()
     }
 
     return ok;
+}
+
+bool ConfigManager::get_config_section(const QString& name, QString& sectionBuffer)
+{
+    QFile file(configName);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream config(&file);
+    QString line;
+    int pos = 0;
+    bool section_start_found = false;
+    bool section_end_found = false;
+
+    while(!config.atEnd() && !section_end_found)
+    {
+        line = config.readLine();
+
+        if(!section_start_found && line.contains(sectionStart))
+        {
+            if(line.contains(name))
+            {
+                if(!is_defined(name, pos))
+                {
+                    section_start_found = true;
+                }
+                else
+                {
+                    pos++;
+                }
+            }
+        }
+
+        if(section_start_found) {
+            if(line.contains(sectionEnd))
+            {
+                section_end_found = true;
+            }
+            else
+            {
+                sectionBuffer += line + "\n";
+            }
+        }
+    }
+
+    file.close();
+
+    return (section_start_found && section_end_found);
+}
+
+/* Check how many sections of the same kind have already been found */
+bool ConfigManager::is_defined(const QString& name, int pos)
+{
+    bool section_exists = false;
+    bool section_defined = false;
+
+    foreach(SectionPosition sec, section_position_vec)
+    {
+        if(sec.sectionName == name)
+        {
+            section_exists = true;
+
+            if(sec.pos < pos)
+            {
+                sec.pos++;
+                section_defined = false;
+                break;
+            }
+            else
+            {
+                section_defined = true;
+                break;
+            }
+        }
+    }
+
+    //Add if the section is not yet in the list
+    if(!section_exists)
+    {
+        section_position_vec.push_back({name, pos});
+        section_defined = false;
+    }
+
+    return section_defined;
+}
+
+void ConfigManager::set_new_config(const QString& configName)
+{
+    this->configName = configName;
+}
+
+void ConfigManager::append_content(const QString& section, const QString& content)
+{
+    static QMutex mtx;
+
+    mtx.lock();
+    this->content += sectionStart + " " + section + "\n" + content + sectionEnd + "\n\n";
+    mtx.unlock();
 }

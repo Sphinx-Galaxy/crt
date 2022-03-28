@@ -26,7 +26,7 @@ Labjack::Labjack(RunManager * runManager,
                  const QString &identifier,
                  const QString &pchannel,
                  const QString &nchannel)
-    : Component(m_element_name, runManager),
+    : Component(runManager, m_element_name),
       connectionType(connectionType),
       identifier(identifier)
 {
@@ -61,7 +61,7 @@ Labjack::~Labjack() {
 
 void Labjack::set_config()
 {
-    config_entry_list.clear();
+    clear_config();
 
     set_value("name", elementName);
     set_value("channel", QString::number(channel_vec.size()));

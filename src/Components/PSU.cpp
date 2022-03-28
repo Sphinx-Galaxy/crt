@@ -22,7 +22,7 @@ PSU::PSU(RunManager* runManager,
          uint channel_max,
          double voltage_max,
          double current_max)
-    : Component(m_element_name, runManager),
+    : Component(runManager, m_element_name),
       address(address),
       channel_max(channel_max),
       voltage_max(voltage_max),
@@ -50,7 +50,7 @@ PSU::~PSU()
 
 void PSU::set_config()
 {
-    config_entry_list.clear();
+    clear_config();
 
     set_value("name", elementName);
     set_value("vendor", check_vendor(vd));

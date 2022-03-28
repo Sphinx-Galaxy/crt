@@ -11,16 +11,15 @@
  */
 
 class QCheckBox;
-class QPushButton;
 
 #include "src/Manager/EventManager.h"
 
 #include <QDialog>
 
 struct RegisteredSignalBox {
-    QCheckBox *checkBox;
+    QCheckBox* checkBox;
 
-    struct RegisteredSignal *sig;
+    RegisteredSignal* regSig;
 };
 
 class SpecSignalDialog : public QDialog {
@@ -30,13 +29,16 @@ public:
     SpecSignalDialog();
     virtual ~SpecSignalDialog();
 
-    QVector<struct RegisteredSignalBox> get_registeredSignal_list() const {return registeredSignal_list;}
+    QVector<struct RegisteredSignalBox> get_regSigBox_vec() const
+    {
+        return regSigBox_vec;
+    }
 
     void add_entry(bool isChecked, struct RegisteredSignal *sig);
     void create_dialog();
 
 private:
-    QVector<struct RegisteredSignalBox> registeredSignal_list;
+    QVector<RegisteredSignalBox> regSigBox_vec;
 };
 
 #endif // SPECSIGNALDIALOG_H

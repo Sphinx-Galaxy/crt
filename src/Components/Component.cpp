@@ -1,15 +1,5 @@
 #include "Component.h"
 
-Component::Component(const QString& elementName, RunManager *runManager)
-    : runManager(runManager), elementName(elementName)
-{
-
-    connect(this, SIGNAL(init_done()), this, SLOT(configure_timer()));
-
-    /* RunManager info */
-    runManager->set_run_mode(AddComponent, elementName);
-}
-
 Component::Component(RunManager* runManager, const QString& config)
     : runManager(runManager)
 {
@@ -17,8 +7,6 @@ Component::Component(RunManager* runManager, const QString& config)
     connect(this, SIGNAL(init_done()), this, SLOT(configure_timer()));
 
     load_config(config);
-    assert(parse_config({"name"}));
-
     elementName = get_value("name");
 
     /* RunManager info */
@@ -33,8 +21,6 @@ Component::~Component()
 
 void Component::start_logging()
 {
-    assert(elementName.isEmpty() == false);
-
     if(!logging)
     {
         runManager->register_component(this, elementName);
@@ -69,8 +55,8 @@ void Component::set_permanent_logging(int permanent_logging)
     }
     else
     {
-        stop_logging();
         this->permanent_logging = false;
+        stop_logging();
     }
 }
 
