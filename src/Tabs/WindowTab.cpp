@@ -23,7 +23,7 @@ void WindowTab::create_layout()
     QVBoxLayout* mainTabLayout = new QVBoxLayout;
     QVBoxLayout* subTabLayout = new QVBoxLayout;
 
-    foreach (SubWindow* window, subWindow_list)
+    foreach(SubWindow* window, subWindow_list)
     {
         /* Main Box for the window */
         QGroupBox* windowGroupBox = new QGroupBox(window->get_component()->get_element_name());
@@ -83,31 +83,22 @@ void WindowTab::update_layout()
 
 void WindowTab::erase_window(SubWindow* window)
 {
-    for(QList<SubWindow*>::iterator it = subWindow_list.begin(); it != subWindow_list.end(); it++)
-    {
-        if((*it) == window)
-        {
-            subWindow_list.erase(it);
-            break;
-        }
-    }
+    subWindow_list.removeAll(window);
 
     update_layout();
 }
 
 void WindowTab::save_to_config()
 {
-    SubWindow* window;
-    foreach (window, subWindow_list)
+    foreach(SubWindow* window, subWindow_list)
     {
-            configManager->append_content(sectionName, window->get_config());
+        configManager->append_content(sectionName, window->get_config());
     }
 }
 
 void WindowTab::clear_subwindow_list()
 {
-    SubWindow* window;
-    foreach (window, subWindow_list)
+    foreach(SubWindow* window, subWindow_list)
     {
         delete window;
     }
@@ -134,7 +125,8 @@ void WindowTab::load_from_config()
     clear_subwindow_list();
 
     QString section_content;
-    while(configManager->get_config_section(sectionName, section_content)) {
+    while(configManager->get_config_section(sectionName, section_content))
+    {
         push_new_subwindow(section_content);
         section_content.clear();
     }

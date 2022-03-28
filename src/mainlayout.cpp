@@ -60,14 +60,14 @@ QToolBar* MainLayout::create_toolbar()
     startTestButton->setDisabled(true);
     connect(startTestButton, SIGNAL(triggered()), runManager, SLOT(start_run()));
     connect(runManager, SIGNAL(run_mode_changed(enum RunMode)), this, SLOT(set_start_button(enum RunMode)));
-    connect(runManager, SIGNAL(isInvalid_changed(bool)), startTestButton, SLOT(setDisabled(bool)));
+    connect(runManager, SIGNAL(isValid_changed(bool)), startTestButton, SLOT(setEnabled(bool)));
 
     stopTestButton = toolbar->addAction("Stop Test");
     stopTestButton->setIcon(QIcon(":/icon/stopButton.png"));
     stopTestButton->setDisabled(true);
     connect(stopTestButton, SIGNAL(triggered()), runManager, SLOT(stop_run()));
     connect(runManager, SIGNAL(run_mode_changed(enum RunMode)), this, SLOT(set_stop_button(enum RunMode)));
-    connect(runManager, SIGNAL(isInvalid_changed(bool)), stopTestButton, SLOT(setDisabled(bool)));
+    connect(runManager, SIGNAL(isValid_changed(bool)), stopTestButton, SLOT(setEnabled(bool)));
 
     toolbar->addSeparator();
 
@@ -97,13 +97,13 @@ void MainLayout::set_start_button(enum RunMode mode)
 {
     switch(mode)
     {
-    case Creation:
+    case RunMode::Creation:
         startTestButton->setIcon(QIcon(":icon/startButton.png"));
         break;
-    case StartRun:
+    case RunMode::StartRun:
         startTestButton->setIcon(QIcon(":icon/startButton_active.png"));
         break;
-    case StopRun:
+    case RunMode::StopRun:
         startTestButton->setIcon(QIcon(":icon/startButton.png"));
         break;
     default:
@@ -115,13 +115,13 @@ void MainLayout::set_stop_button(enum RunMode mode)
 {
     switch(mode)
     {
-    case Creation:
+    case RunMode::Creation:
         stopTestButton->setIcon(QIcon(":icon/stopButton.png"));
         break;
-    case StartRun:
+    case RunMode::StartRun:
         stopTestButton->setIcon(QIcon(":icon/stopButton.png"));
         break;
-    case StopRun:
+    case RunMode::StopRun:
         stopTestButton->setIcon(QIcon(":icon/stopButton_active.png"));
         break;
     default:

@@ -16,7 +16,7 @@ class QElapsedTimer;
 
 #include <QWidget>
 
-enum RunMode {Creation=0, Init=1, StartRun=3, StartLog=4, StopLog=5,
+enum class RunMode {Creation=0, Init=1, StartRun=3, StartLog=4, StopLog=5,
                   AddComponent=6, RemoveComponent=7, Event=8, StopRun=255};
 
 Q_DECLARE_METATYPE(RunMode) // So it can be used in slots and signals
@@ -43,7 +43,6 @@ public:
 public slots:
     void start_run();
     void stop_run();
-    void set_run_mode(enum RunMode mode, const QString& component);
 
 private slots:
     void update_run();
@@ -51,14 +50,11 @@ private slots:
 
 signals:
     void isValid_changed(bool);
-    void isInvalid_changed(bool);
     void isRunning_changed(bool);
 
     void run_name_changed(const QString&);
     void run_time_changed(const QString&);
     void run_mode_changed(enum RunMode);
-
-    void enable_runButton(bool);
 
 private:
     QString runName;

@@ -8,14 +8,10 @@ Component::Component(RunManager* runManager, const QString& config)
 
     load_config(config);
     elementName = get_value("name");
-
-    /* RunManager info */
-    runManager->set_run_mode(AddComponent, elementName);
 }
 
 Component::~Component()
 {
-    runManager->set_run_mode(RemoveComponent, elementName);
     runManager->deregister_component(this);
 }
 
@@ -23,10 +19,8 @@ void Component::start_logging()
 {
     if(!logging)
     {
-        runManager->register_component(this, elementName);
+        runManager->register_component(this);
         runManager->set_file_header(this, generate_header());
-
-        runManager->set_run_mode(StartLog, elementName);
 
         logging = true;
         emit is_logging(true);
@@ -41,8 +35,6 @@ void Component::stop_logging()
         emit is_logging(false);
 
         runManager->deregister_component(this);
-
-        runManager->set_run_mode(StopLog, elementName);
     }
 }
 
