@@ -34,8 +34,6 @@ void (PSUChannel::*PSUChannel::select_update_vendor())(void)
     {
         case Vendor::rohdeSchwarz:
             return &PSUChannel::update_rohdeschwarz;
-        case Vendor::blanko:
-            return &PSUChannel::update_blanko;
         case Vendor::none:
             return &PSUChannel::update_none;
     }
@@ -47,8 +45,6 @@ void (PSUChannel::*PSUChannel::select_meas_voltage_vendor())(void)
     {
         case Vendor::rohdeSchwarz:
             return &PSUChannel::meas_voltage_rohdeschwarz;
-        case Vendor::blanko:
-            return &PSUChannel::meas_voltage_blanko;
         case Vendor::none:
             return &PSUChannel::meas_voltage_none;
     }
@@ -60,8 +56,6 @@ void (PSUChannel::*PSUChannel::select_meas_current_vendor())(void)
     {
         case Vendor::rohdeSchwarz:
             return &PSUChannel::meas_current_rohdeschwarz;
-        case Vendor::blanko:
-            return &PSUChannel::meas_current_blanko;
         case Vendor::none:
             return &PSUChannel::meas_current_none;
     }
@@ -173,21 +167,6 @@ void PSUChannel::meas_current_rohdeschwarz()
             current_meas = (QString(output)).toDouble()*1000;
         }
     }
-}
-
-void PSUChannel::update_blanko()
-{
-
-}
-
-void PSUChannel::meas_voltage_blanko()
-{
-
-}
-
-void PSUChannel::meas_current_blanko()
-{
-
 }
 
 void PSUChannel::update_none()

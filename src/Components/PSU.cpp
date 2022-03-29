@@ -99,10 +99,6 @@ enum PSUChannel::Vendor PSU::check_vendor(const QString& vendor)
     {
         vd = PSUChannel::Vendor::rohdeSchwarz;
     }
-    else if(vendor.contains("blanko", Qt::CaseInsensitive))
-    {
-        vd = PSUChannel::Vendor::blanko;
-    }
 
     return vd;
 }
@@ -111,11 +107,7 @@ QString PSU::check_vendor(enum PSUChannel::Vendor vendor)
 {
     QString res = "none";
 
-    if(vendor == PSUChannel::Vendor::blanko)
-    {
-        res = "blanko";
-    }
-    else if(vendor == PSUChannel::Vendor::rohdeSchwarz)
+    if(vendor == PSUChannel::Vendor::rohdeSchwarz)
     {
         res = "rohdeschwarz";
     }

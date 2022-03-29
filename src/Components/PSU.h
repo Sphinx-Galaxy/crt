@@ -98,7 +98,7 @@ inline void PSU::set_master_trigger(int master_trigger)
 
 inline void PSU::update_settings()
 {
-    foreach (PSUChannel * channel, channel_vec)
+    foreach(PSUChannel* channel, channel_vec)
     {
         channel->update();
     }

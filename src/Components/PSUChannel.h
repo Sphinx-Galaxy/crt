@@ -18,7 +18,7 @@ class PSUChannel : public QWidget
 Q_OBJECT
 
 public:
-    enum class Vendor {none, rohdeSchwarz, blanko};
+    enum class Vendor {none, rohdeSchwarz};
 
     PSUChannel(uint number,
                LXIClient* lxi,
@@ -118,11 +118,6 @@ private:
     void update_rohdeschwarz();
     void meas_voltage_rohdeschwarz();
     void meas_current_rohdeschwarz();
-
-    /* TTI */
-    void update_blanko();
-    void meas_voltage_blanko();
-    void meas_current_blanko();
 
     /* NONE */
     void update_none();
