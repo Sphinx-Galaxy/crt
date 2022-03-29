@@ -126,15 +126,16 @@ QString PSU::check_vendor(enum PSUChannel::Vendor vendor)
 void PSU::init()
 {
     /* Setup lxi */
-#ifndef DUMMY_DATA
-    QString ip_address = address.mid(0, address.indexOf(":"));
-    uint port = (address.mid(address.indexOf(":") + 1, address.size() - address.indexOf(":") - 1)).toUInt();
+    if(vendor != PSUChannel::Vendor::none)
+    {
+        QString ip_address = address.mid(0, address.indexOf(":"));
+        uint port = (address.mid(address.indexOf(":") + 1, address.size() - address.indexOf(":") - 1)).toUInt();
 
-    lxi = new LXIClient(port, ip_address);
+        lxi = new LXIClient(port, ip_address);
 
-    // Write reset
-    lxi->query("RST");
-#endif
+        // Write reset
+        lxi->query("RST");
+    }
 
     /* Setup channel */
     for(uint i = 0; i < channel_max; i++)
