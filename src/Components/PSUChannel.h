@@ -18,11 +18,11 @@ class PSUChannel : public QWidget
 Q_OBJECT
 
 public:
-    enum vendor {none, rohdeSchwarz, tti};
+    enum class Vendor {none, rohdeSchwarz, blanko};
 
     PSUChannel(uint number,
                LXIClient* lxi,
-               enum vendor vd,
+               enum Vendor vendor,
                double voltage_set,
                double current_set,
                double voltage_max,
@@ -83,9 +83,9 @@ public slots:
     void set_voltage();
     void set_current();
 
-    void update();
-    void meas_voltage();
-    void meas_current();
+    virtual void update();
+    virtual void meas_voltage();
+    virtual void meas_current();
 
 signals:
     void voltage_changed(const QString& text);
@@ -96,7 +96,7 @@ signals:
 private:
     uint number;
     LXIClient* lxi;
-    enum vendor vd;
+    enum Vendor vendor;
     bool enable = false;
     bool trigger = false;
 
@@ -106,15 +106,28 @@ private:
 
     void overcurrent_protection();
 
+    void (PSUChannel::*select_update_vendor())(void);
+    void (PSUChannel::*select_meas_voltage_vendor())(void);
+    void (PSUChannel::*select_meas_current_vendor())(void);
+
+    void (PSUChannel::*update_vendor)();
+    void (PSUChannel::*meas_voltage_vendor)();
+    void (PSUChannel::*meas_current_vendor)();
+
     /* Rohde Schwarz */
     void update_rohdeschwarz();
     void meas_voltage_rohdeschwarz();
     void meas_current_rohdeschwarz();
 
     /* TTI */
-    void update_tti();
-    void meas_voltage_tti();
-    void meas_current_tti();
+    void update_blanko();
+    void meas_voltage_blanko();
+    void meas_current_blanko();
+
+    /* NONE */
+    void update_none();
+    void meas_voltage_none();
+    void meas_current_none();
 
     /* VENDOR */
     //void update_vendor();
@@ -122,9 +135,6 @@ private:
     //void meas_current_vendor();
 };
 
-inline void PSUChannel::set_trigger(int trigger)
-{
-    this->trigger = trigger > 0 ? true : false;
-}
+
 
 #endif // PSUCHANNEL_H

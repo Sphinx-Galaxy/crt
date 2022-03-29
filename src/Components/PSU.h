@@ -32,14 +32,14 @@ public:
 
     virtual ~PSU() override;
 
-    enum PSUChannel::vendor get_vendor() const
+    enum PSUChannel::Vendor get_vendor() const
     {
-        return vd;
+        return vendor;
     }
 
-    QVector<PSUChannel *> get_channel_list() const
+    QVector<PSUChannel *> get_channel_vec() const
     {
-        return channel_list;
+        return channel_vec;
     }
 
     bool get_master_enable() const
@@ -71,23 +71,21 @@ signals:
 
 protected:
     QString address;
-    enum PSUChannel::vendor vd;
+    enum PSUChannel::Vendor vendor;
     bool master_switch;
     bool master_enable = false;
     bool master_trigger = false;
     uint channel_max = 0;
     double voltage_max = 0, current_max = 0;
-    LXIClient* lxi;
+    LXIClient* lxi = nullptr;
 
-    QVector<PSUChannel*> channel_list;
+    QVector<PSUChannel*> channel_vec;
 
 private:
-    enum PSUChannel::vendor check_vendor(const QString& vendor);
-    QString check_vendor(enum PSUChannel::vendor vd);
+    enum PSUChannel::Vendor check_vendor(const QString& vendor);
+    QString check_vendor(enum PSUChannel::Vendor vendor);
 
     bool check_network_connection();
-
-    void set_master_rohdeschwarz();
 
     QStringList generate_header() override;
 };
@@ -100,7 +98,7 @@ inline void PSU::set_master_trigger(int master_trigger)
 
 inline void PSU::update_settings()
 {
-    foreach (PSUChannel * channel, channel_list)
+    foreach (PSUChannel * channel, channel_vec)
     {
         channel->update();
     }

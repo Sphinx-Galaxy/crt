@@ -9,19 +9,62 @@
 
 PSUChannel::PSUChannel(uint number,
                        LXIClient* lxi,
-                       enum vendor vd,
+                       enum Vendor vendor,
                        double voltage_set,
                        double current_set,
                        double voltage_max,
                        double current_max)
     : number(number),
       lxi(lxi),
-      vd(vd),
+      vendor(vendor),
       voltage_max(voltage_max),
       current_max(current_max)
 {
     this->voltage_set = voltage_set > voltage_max ? voltage_max : voltage_set;
     this->current_set = current_set > current_max ? current_max : current_set;
+
+    update_vendor = select_update_vendor();
+    meas_voltage_vendor = select_meas_voltage_vendor();
+    meas_current_vendor = select_meas_current_vendor();
+}
+
+void (PSUChannel::*PSUChannel::select_update_vendor())(void)
+{
+    switch(vendor)
+    {
+        case Vendor::rohdeSchwarz:
+            return &PSUChannel::update_rohdeschwarz;
+        case Vendor::blanko:
+            return &PSUChannel::update_blanko;
+        case Vendor::none:
+            return &PSUChannel::update_none;
+    }
+}
+
+void (PSUChannel::*PSUChannel::select_meas_voltage_vendor())(void)
+{
+    switch(vendor)
+    {
+        case Vendor::rohdeSchwarz:
+            return &PSUChannel::meas_voltage_rohdeschwarz;
+        case Vendor::blanko:
+            return &PSUChannel::meas_voltage_blanko;
+        case Vendor::none:
+            return &PSUChannel::meas_voltage_none;
+    }
+}
+
+void (PSUChannel::*PSUChannel::select_meas_current_vendor())(void)
+{
+    switch(vendor)
+    {
+        case Vendor::rohdeSchwarz:
+            return &PSUChannel::meas_current_rohdeschwarz;
+        case Vendor::blanko:
+            return &PSUChannel::meas_current_blanko;
+        case Vendor::none:
+            return &PSUChannel::meas_current_none;
+    }
 }
 
 void PSUChannel::set_enable(int enable)
@@ -61,6 +104,11 @@ void PSUChannel::set_current(const QString& current)
     current_set = dcurrent > current_max ? current_max : dcurrent;
 }
 
+void PSUChannel::set_trigger(int trigger)
+{
+    this->trigger = trigger > 0 ? true : false;
+}
+
 void PSUChannel::overcurrent_protection()
 {
     if(current_set < current_meas*0.95)
@@ -78,61 +126,17 @@ void PSUChannel::update()
 {
     overcurrent_protection();
 
-#ifndef DUMMY_DATA
-    if(vd == vendor::rohdeSchwarz)
-    {
-        update_rohdeschwarz();
-    }
-    else if(vd == vendor::tti)
-    {
-        update_tti();
-    }
-#endif
-
-//    if(vd == vendor::vendor)
-//        update_vendor();
+    (this->*update_vendor)();
 }
 
 void PSUChannel::meas_voltage()
 {
-#ifdef DUMMY_DATA
-    voltage_meas = voltage_set + double(QRandomGenerator::global()->bounded(-qint16(100), qint16(100))) / double(200);
-    voltage_meas = voltage_meas < 0 ? 0 : voltage_meas;
-    return ;
-#endif
-
-    if(vd == vendor::rohdeSchwarz)
-    {
-        meas_voltage_rohdeschwarz();
-    }
-    else if(vd == vendor::tti)
-    {
-        meas_voltage_tti();
-    }
-
-//    if(vd == vendor::vendor)
-//        meas_voltage_vendor();
+    (this->*meas_current_vendor)();
 }
 
 void PSUChannel::meas_current()
 {
-#ifdef DUMMY_DATA
-    current_meas = (current_set/2) * (double(QRandomGenerator::global()->bounded(qint16(80), qint16(120))) / double(100));
-    current_meas = current_meas < 0 || !enable ? 0 : current_meas;
-    return ;
-#endif
-
-    if(vd == vendor::rohdeSchwarz)
-    {
-        meas_current_rohdeschwarz();
-    }
-    else if(vd == vendor::tti)
-    {
-        meas_current_tti();
-    }
-
-//    if(vd == vendor::vendor)
-//        meas_current_vendor();
+    (this->*meas_current_vendor)();
 }
 
 void PSUChannel::update_rohdeschwarz()
@@ -171,14 +175,34 @@ void PSUChannel::meas_current_rohdeschwarz()
     }
 }
 
-void PSUChannel::update_tti() {
+void PSUChannel::update_blanko()
+{
 
 }
 
-void PSUChannel::meas_voltage_tti() {
+void PSUChannel::meas_voltage_blanko()
+{
 
 }
 
-void PSUChannel::meas_current_tti() {
+void PSUChannel::meas_current_blanko()
+{
 
+}
+
+void PSUChannel::update_none()
+{
+
+}
+
+void PSUChannel::meas_voltage_none()
+{
+    voltage_meas = voltage_set + double(QRandomGenerator::global()->bounded(-qint16(100), qint16(100))) / double(200);
+    voltage_meas = voltage_meas < 0 ? 0 : voltage_meas;
+}
+
+void PSUChannel::meas_current_none()
+{
+    current_meas = (current_set/2) * (double(QRandomGenerator::global()->bounded(qint16(80), qint16(120))) / double(100));
+    current_meas = current_meas < 0 || !enable ? 0 : current_meas;
 }

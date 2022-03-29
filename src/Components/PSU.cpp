@@ -9,7 +9,7 @@ PSU::PSU(RunManager* runManager, const QString &config)
     assert(parse_config({"name", "vendor", "master", "address", "channel"}));
 
     this->elementName = get_value("name");
-    this->vd = check_vendor(get_value("vendor"));
+    this->vendor = check_vendor(get_value("vendor"));
     this->master_switch = get_value("master").toInt();
     this->address = get_value("address");
     this->channel_max = get_value("channel").toUInt();
@@ -30,9 +30,9 @@ PSU::PSU(RunManager* runManager,
 {
 
     this->elementName = m_element_name;
-    this->vd = check_vendor(vendor);
+    this->vendor = check_vendor(vendor);
 
-    if(vd == PSUChannel::rohdeSchwarz) // || vendor)
+    if(this->vendor == PSUChannel::Vendor::rohdeSchwarz) // || vendor)
     {
         master_switch = true;
     }
@@ -40,12 +40,12 @@ PSU::PSU(RunManager* runManager,
 
 PSU::~PSU()
 {
-    foreach (PSUChannel* channel, channel_list)
+    foreach (PSUChannel* channel, channel_vec)
     {
         delete channel;
     }
 
-    //delete lxi;
+    delete lxi;
 }
 
 void PSU::set_config()
@@ -53,17 +53,17 @@ void PSU::set_config()
     clear_config();
 
     set_value("name", elementName);
-    set_value("vendor", check_vendor(vd));
+    set_value("vendor", check_vendor(vendor));
     set_value("master", QString::number(master_switch));
     set_value("address", address);
-    set_value("channel", QString::number(channel_list.size()));
+    set_value("channel", QString::number(channel_vec.size()));
 
-    for(int i = 0; i < channel_list.size(); i++)
+    for(int i = 0; i < channel_vec.size(); ++i)
     {
-        set_value("c" + QString::number(i) + "vs", QString::number(channel_list[i]->get_voltage_set()));
-        set_value("c" + QString::number(i) + "cs", QString::number(channel_list[i]->get_current_set()));
-        set_value("c" + QString::number(i) + "vm", QString::number(channel_list[i]->get_voltage_max()));
-        set_value("c" + QString::number(i) + "cm", QString::number(channel_list[i]->get_current_max()));
+        set_value("c" + QString::number(i) + "vs", QString::number(channel_vec[i]->get_voltage_set()));
+        set_value("c" + QString::number(i) + "cs", QString::number(channel_vec[i]->get_current_set()));
+        set_value("c" + QString::number(i) + "vm", QString::number(channel_vec[i]->get_voltage_max()));
+        set_value("c" + QString::number(i) + "cm", QString::number(channel_vec[i]->get_current_max()));
     }
 }
 
@@ -71,8 +71,10 @@ void PSU::update()
 {
     /* Gather data */
     QVector<double> values;
-    values.reserve(channel_list.size()*2);
-    foreach (PSUChannel* channel, channel_list) {
+    values.reserve(channel_vec.size()*2);
+
+    foreach (PSUChannel* channel, channel_vec)
+    {
         channel->meas_voltage();
         channel->meas_current();
         values.push_back(channel->get_voltage_meas());
@@ -88,32 +90,32 @@ void PSU::update()
     emit data_available();
 }
 
-enum PSUChannel::vendor PSU::check_vendor(const QString& vendor)
+enum PSUChannel::Vendor PSU::check_vendor(const QString& vendor)
 {
-    enum PSUChannel::vendor vd = PSUChannel::none;
+    enum PSUChannel::Vendor vd = PSUChannel::Vendor::none;
 
     if(vendor.contains("rohde", Qt::CaseInsensitive) ||
             vendor.contains("schwarz", Qt::CaseInsensitive))
     {
-        vd = PSUChannel::rohdeSchwarz;
+        vd = PSUChannel::Vendor::rohdeSchwarz;
     }
-    else if(vendor.contains("tti", Qt::CaseInsensitive))
+    else if(vendor.contains("blanko", Qt::CaseInsensitive))
     {
-        vd = PSUChannel::tti;
+        vd = PSUChannel::Vendor::blanko;
     }
 
     return vd;
 }
 
-QString PSU::check_vendor(enum PSUChannel::vendor vd)
+QString PSU::check_vendor(enum PSUChannel::Vendor vendor)
 {
     QString res = "none";
 
-    if(vd == PSUChannel::tti)
+    if(vendor == PSUChannel::Vendor::blanko)
     {
-        res = "tti";
+        res = "blanko";
     }
-    else if(vd == PSUChannel::rohdeSchwarz)
+    else if(vendor == PSUChannel::Vendor::rohdeSchwarz)
     {
         res = "rohdeschwarz";
     }
@@ -139,7 +141,7 @@ void PSU::init()
     {
         if(is_empty())
         {
-            channel_list.push_back(new PSUChannel{i, lxi, vd, 0, 0, voltage_max, current_max});
+            channel_vec.push_back(new PSUChannel{i, lxi, vendor, 0, 0, voltage_max, current_max});
         }
         else
         {
@@ -150,7 +152,7 @@ void PSU::init()
             double voltage_max = get_value("c" + QString::number(i) + "vm").toDouble();
             double current_max = get_value("c" + QString::number(i) + "cm").toDouble();
 
-            channel_list.push_back(new PSUChannel{i, lxi, vd, voltage_set, current_set, voltage_max, current_max});
+            channel_vec.push_back(new PSUChannel{i, lxi, vendor, voltage_set, current_set, voltage_max, current_max});
         }
     }
 
@@ -165,26 +167,17 @@ void PSU::init()
 void PSU::set_master_enable(int master_enable) {
     this->master_enable = master_enable == 0 ? false : true;
 
-#ifndef DUMMY_DATA
-    if(vd == PSUChannel::rohdeSchwarz)
+    if(vendor == PSUChannel::Vendor::rohdeSchwarz)
     {
-        set_master_rohdeschwarz();
+        lxi->query("OUTP:MAST " + QString(master_enable ? "ON" : "OFF"));
     }
-//  else if(vd == vendor)
-//        set_master_vendor();
-#endif
 
     emit master_changed(this->master_enable);
 }
 
-void PSU::set_master_rohdeschwarz()
-{
-    lxi->query("OUTP:MAST " + QString(master_enable ? "ON" : "OFF"));
-}
-
 void PSU::switch_on()
 {
-    foreach (PSUChannel * channel, channel_list)
+    foreach(PSUChannel* channel, channel_vec)
     {
         if(channel->get_trigger())
         {
@@ -198,13 +191,14 @@ void PSU::switch_on()
     }
 }
 
-void PSU::switch_off() {
+void PSU::switch_off()
+{
     if(has_master_switch() && master_trigger)
     {
         set_master_enable(0);
     }
 
-    foreach (PSUChannel * channel, channel_list)
+    foreach(PSUChannel* channel, channel_vec)
     {
         if(channel->get_trigger())
         {
@@ -217,7 +211,7 @@ QStringList PSU::generate_header()
 {
     QStringList header;
 
-    foreach (PSUChannel * channel, channel_list)
+    foreach(PSUChannel* channel, channel_vec)
     {
         header.push_back("V" + QString::number(channel->get_number()));
         header.push_back("mA" + QString::number(channel->get_number()));
