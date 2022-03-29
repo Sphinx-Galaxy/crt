@@ -34,7 +34,7 @@ void PSUW::create_layout()
 {
     QHBoxLayout* mainHLayout = new QHBoxLayout;
 
-    foreach (PSUChannel* channel, psu->get_channel_list()) {
+    foreach (PSUChannel* channel, psu->get_channel_vec()) {
         QGroupBox* channelGroupBox = new QGroupBox("Channel: " + QString::number(channel->get_number()));
         QGridLayout* psuGridLayout = new QGridLayout;
 
