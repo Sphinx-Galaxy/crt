@@ -11,7 +11,7 @@ SpecSignalDialog::SpecSignalDialog() {}
 SpecSignalDialog::~SpecSignalDialog() {}
 
 void SpecSignalDialog::create_dialog() {
-    QVBoxLayout* buttonLayout = new QVBoxLayout(this);
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
 
     foreach(RegisteredSignalBox regSigBox, regSigBox_vec)
     {
@@ -33,7 +33,7 @@ void SpecSignalDialog::create_dialog() {
     connect(cancleButton, SIGNAL(clicked()), this, SLOT(reject()));
     hlayout->addWidget(cancleButton);
 
-    QVBoxLayout* vlayout = new QVBoxLayout(this);
+    QVBoxLayout* vlayout = new QVBoxLayout;
     vlayout->addLayout(buttonLayout);
     vlayout->addLayout(hlayout);
 
