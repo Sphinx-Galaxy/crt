@@ -90,6 +90,14 @@ void PSU::update()
     emit data_available();
 }
 
+void PSU::update_settings()
+{
+    foreach(PSUChannel* channel, channel_vec)
+    {
+        channel->update();
+    }
+}
+
 enum PSUChannel::Vendor PSU::check_vendor(const QString& vendor)
 {
     enum PSUChannel::Vendor vd = PSUChannel::Vendor::none;
@@ -166,6 +174,11 @@ void PSU::set_master_enable(int master_enable) {
     }
 
     emit master_changed(this->master_enable);
+}
+
+void PSU::set_master_trigger(int master_trigger)
+{
+    this->master_trigger = master_trigger > 0 ? true : false;
 }
 
 void PSU::switch_on()
