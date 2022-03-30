@@ -16,15 +16,22 @@ class EthernetClient;
 #include "Component.h"
 #include "OSCChannel.h"
 
+enum class TriggerMode {Auto, Normal, Single};
+
+Q_DECLARE_METATYPE(TriggerMode) // So it can be used in slots and signals
+
 class OSC : public Component {
 Q_OBJECT
 
-enum TriggerMode {Auto, Normal, Single};
-
 public:
-OSC(RunManager * runManager, const QString &config);
-OSC(RunManager * runManager, const QString &m_element_name, const QString &address, const QString &vendor, uint channel_max);
-virtual ~OSC() override;
+    OSC(RunManager* runManager, const QString& config);
+    OSC(RunManager* runManager,
+        const QString& m_element_name,
+        const QString& address,
+        const QString& vendor,
+        uint channel_max);
+
+    virtual ~OSC() override;
 
     void set_config() override;
 
@@ -43,33 +50,41 @@ public slots:
     void set_trigger_mode(enum TriggerMode triggerMode);
     void set_timebase(double timebase);
 
-    void switch_on();
-    void switch_off();
-
 signals:
     void disconnected(bool);
 
-    void running_changed(int);
-    void trigger_channel_changed(int);
-    void trigger_mode_changed(int);
-    void timebase_changed(double);
+    void settings_changed();
 
 protected:
     QString address;
     uint channel_max = 0;
-    EthernetClient *eth;
+    EthernetClient* eth;
+    enum OSCChannel::Vendor vendor;
 
-    QVector<OSCChannel *> channel_list;
+    QVector<OSCChannel*> channel_vec;
+
+    bool running;
+    uint8_t trigger_channel;
+    enum TriggerMode triggerMode;
+    double timebase;
 
 private:
     bool check_network_connection();
 
+    enum OSCChannel::Vendor check_vendor(const QString& vendor);
+    QString check_vendor(enum OSCChannel::Vendor vendor);
+
+    void (OSC::*select_update_settings_vendor())(void);
+
+    void (OSC::*update_settings_vendor)();
+
+    /* Rigol */
+    void update_settings_rigol();
+
+    /* NONE */
+    void update_settings_none();
+
     QStringList generate_header() override;
 };
-
-inline void OSC::update_settings() {
-    foreach (OSCChannel * channel, channel_list)
-        channel->update();
-}
 
 #endif // OSC_H
