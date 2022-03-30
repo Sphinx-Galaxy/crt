@@ -1,0 +1,20 @@
+Section PSU
+name=#1 Top Left
+vendor=rohdeschwarz
+master=1
+address=192.168.3.124:5025
+channel=3
+c0vs=32
+c0cs=1000
+c0vm=32
+c0cm=1000
+c1vs=32
+c1cs=1000
+c1vm=32
+c1cm=1000
+c2vs=32
+c2cs=1000
+c2vm=32
+c2cm=1000
+signal=
+EndSection

@@ -1,6 +1,6 @@
 # General Information
 
-This Configurable Raditation Testsuite was designed for testing (multiple) devices under irradiation. It was made it the Qt framework and it presents different component groups in the various tabs. E.g. the first tab is all the power supplies in the test-setup, here the voltage and current can be set and the supply switched on/off either manually or automatically.
+This Configurable Raditation Testsuite was designed for testing (multiple) devices under irradiation. It was made with the Qt framework and it presents different component groups in the various tabs. E.g. the first tab shows all the power supplies in the test-setup, here the voltage and current can be set and the supply switched on/off either manually or automatically.
 
 # Documentation
 
@@ -9,6 +9,14 @@ The user manual can be found in the 'doc' folder, it explains the manual use as 
 # Configurations
 
 In the 'configs' folder are several configurations from practical radiation test and also a few example configurations. Additionally a python script 'LBJ_to_CRT.py' can be used to generate a labjack configuration from a *.csv file derived from the Labjack_Setup.xlsx.
+
+# Docker
+
+In case you don't want to setup stuff by yourself, use the docker file:
+
+```
+$ docker build -t gsdr Docker
+```
 
 # Build Prerequisites
 
