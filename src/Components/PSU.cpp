@@ -36,11 +36,15 @@ PSU::PSU(RunManager* runManager,
     {
         master_switch = true;
     }
+    else
+    {
+        master_switch = false;
+    }
 }
 
 PSU::~PSU()
 {
-    foreach (PSUChannel* channel, channel_vec)
+    foreach(PSUChannel* channel, channel_vec)
     {
         delete channel;
     }
@@ -73,7 +77,7 @@ void PSU::update()
     QVector<double> values;
     values.reserve(channel_vec.size()*2);
 
-    foreach (PSUChannel* channel, channel_vec)
+    foreach(PSUChannel* channel, channel_vec)
     {
         channel->meas_voltage();
         channel->meas_current();
@@ -129,7 +133,7 @@ void PSU::init()
     if(vendor != PSUChannel::Vendor::none)
     {
         QString ip_address = address.mid(0, address.indexOf(":"));
-        uint port = (address.mid(address.indexOf(":") + 1, address.size() - address.indexOf(":") - 1)).toUInt();
+        uint port = (address.midRef(address.indexOf(":") + 1, address.size() - address.indexOf(":") - 1)).toUInt();
 
         lxi = new LXIClient(port, ip_address);
 

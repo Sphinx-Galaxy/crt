@@ -3,8 +3,8 @@
 #include "EthernetClient.h"
 
 OSC::OSC(RunManager* runManager, const QString &config)
-    : Component(runManager, config) {
-
+    : Component(runManager, config)
+{
     load_config(config);
     assert(parse_config({"name", "vendor", "master", "address", "channel"}));
 
@@ -17,8 +17,16 @@ OSC::OSC(RunManager* runManager, const QString &config)
     connect(this, SIGNAL(settings_changed()), this, SLOT(update_settings()));
 }
 
-OSC::OSC(RunManager * runManager, const QString &m_element_name, const QString &address, const QString &vendor, uint channel_max)
-    : Component(runManager, m_element_name), address(address), channel_max(channel_max) {
+OSC::OSC(RunManager* runManager,
+         const QString& m_element_name,
+         const QString& address,
+         const QString& vendor,
+         uint channel_max)
+    : Component(runManager,
+                m_element_name),
+                address(address),
+                channel_max(channel_max)
+{
 
     this->elementName = m_element_name;
     this->vendor = check_vendor(vendor);

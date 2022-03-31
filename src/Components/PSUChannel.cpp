@@ -125,7 +125,7 @@ void PSUChannel::update()
 
 void PSUChannel::meas_voltage()
 {
-    (this->*meas_current_vendor)();
+    (this->*meas_voltage_vendor)();
 }
 
 void PSUChannel::meas_current()
