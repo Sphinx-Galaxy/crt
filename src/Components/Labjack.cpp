@@ -7,11 +7,10 @@
 #include <QRandomGenerator>
 #endif
 
-Labjack::Labjack(RunManager * runManager, const QString &config)
+Labjack::Labjack(RunManager* runManager, const QString& config)
     : Component(runManager, config)
 {
     load_config(config);
-    assert(parse_config({"name" , "channel", "con", "id"}));
 
     this->elementName = get_value("name");
     channel = get_value("channel").toUInt();
@@ -19,13 +18,13 @@ Labjack::Labjack(RunManager * runManager, const QString &config)
     identifier = get_value("id");
 }
 
-Labjack::Labjack(RunManager * runManager,
-                 const QString &m_element_name,
-                 const QString &channel_name,
+Labjack::Labjack(RunManager* runManager,
+                 const QString& m_element_name,
+                 const QString& channel_name,
                  int connectionType,
-                 const QString &identifier,
-                 const QString &pchannel,
-                 const QString &nchannel)
+                 const QString& identifier,
+                 const QString& pchannel,
+                 const QString& nchannel)
     : Component(runManager, m_element_name),
       connectionType(connectionType),
       identifier(identifier)

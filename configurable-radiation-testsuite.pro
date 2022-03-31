@@ -18,7 +18,7 @@ DEFINES += DUMMY_DATA
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-unix:LIBS += -L/usr/local/lib -lLabJackM -llxi
+unix:LIBS += -L/usr/local/lib -lLabJackM -llxi -ltirpc
 
 win32:INCLUDEPATH += 'C:/Program Files (x86)/LabJack/Drivers'
 win32:LIBS += -L'C:/Program Files (x86)/LabJack/Drivers/64bit/' -lLabJackM

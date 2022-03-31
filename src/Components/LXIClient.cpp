@@ -3,12 +3,12 @@
 #include <QTimer>
 #include <lxi.h>
 
-const int LXIClient::timeout = 2000;
+const int LXIClient::timeout = 5000;
 
 LXIClient::LXIClient(uint port, const QString& address) : port(port), address(address)
 {
     lxi_init();
-    device = lxi_connect(address.toStdString().c_str(), port, "inst0", timeout, VXI11);
+    device = lxi_connect(address.toStdString().c_str(), port, "inst0", timeout, RAW);
 }
 
 LXIClient::~LXIClient()

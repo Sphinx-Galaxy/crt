@@ -29,7 +29,6 @@ PSU::PSU(RunManager* runManager,
       voltage_max(voltage_max),
       current_max(current_max)
 {
-
     this->elementName = m_element_name;
     this->vendor = check_vendor(vendor);
 
@@ -156,7 +155,10 @@ void PSU::init()
             double voltage_max = DBL_MAX;
             double current_max = DBL_MAX;
 
-            if(parse_config({"c" + QString::number(i) + "vs", "c" + QString::number(i) + "cs", "c" + QString::number(i) + "vm", "c" + QString::number(i) + "cm"}))
+            if(parse_config({"c" + QString::number(i) + "vs",
+                            "c" + QString::number(i) + "cs",
+                            "c" + QString::number(i) + "vm",
+                            "c" + QString::number(i) + "cm"}))
             {
                 voltage_set = get_value("c" + QString::number(i) + "vs").toDouble();
                 current_set = get_value("c" + QString::number(i) + "cs").toDouble();
