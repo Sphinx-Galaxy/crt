@@ -27,13 +27,29 @@ void ConfigElement::load_config(const QString& content)
     }
 }
 
+bool ConfigElement::parse_config(const QString& config, const QVector<QString>& entry_name_vec)
+{
+    bool ok = true;
+
+    foreach(QString entry_name, entry_name_vec)
+    {
+        if(config.contains(entry_name) == false)
+        {
+            ok &= false;
+            break;
+        }
+    }
+
+    return ok;
+}
+
 bool ConfigElement::parse_config(const QVector<QString>& entry_name_vec)
 {
     bool ok = true;
 
     foreach(QString entry_name, entry_name_vec)
     {
-        if(get_entry((entry_name)) == nullptr)
+        if(get_entry(entry_name) == nullptr)
         {
             ok &= false;
             break;

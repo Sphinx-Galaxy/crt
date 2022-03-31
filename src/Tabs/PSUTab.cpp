@@ -11,10 +11,17 @@ PSUTab::PSUTab(ConfigManager* m_configManager, RunManager* m_runManager)
 
 void PSUTab::push_new_subwindow(const QString& config)
 {
-    PSUW* psuw = new PSUW(runManager, new PSU(runManager, config));
-    subWindow_list.push_back(psuw);
+    if(PSU::parse_config(config, {"name", "vendor", "address", "channel"}) == false)
+    {
+        PSUW* psuw = new PSUW(runManager, new PSU(runManager, config));
+        subWindow_list.push_back(psuw);
 
-    layout_updater(psuw);
+        layout_updater(psuw);
+    }
+    else
+    {
+        handle_parsing_error("PSU");
+    }
 }
 
 void PSUTab::create_subwindow_from_dialog() {

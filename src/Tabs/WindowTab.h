@@ -60,6 +60,8 @@ protected:
 
     virtual void create_add_subwindow_dialog() = 0;
     void layout_updater(SubWindow* sub);
+
+    void handle_parsing_error(const QString& element_name);
 };
 
 #endif // WINDOWTAB_H

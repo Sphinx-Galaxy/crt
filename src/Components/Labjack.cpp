@@ -98,15 +98,33 @@ void Labjack::init()
         {
             channel_vec.push_back(new LabjackChannel(m_name[i], &handle, m_pchannel[i], m_nchannel[i]));
         }
-        else {
-            QString name = get_value("c" + QString::number(i) + "n");
+        else
+        {
+            QString name = "";
 
-            int p_chan = get_value("c" + QString::number(i) + "pc").toInt();
-            int n_chan = get_value("c" + QString::number(i) + "nc").toInt();
+            int p_chan = 0;
+            int n_chan = 0;
 
-            double boundary = get_value("c" + QString::number(i) + "b").toDouble();
-            int gain = get_value("c" + QString::number(i) + "g").toInt();
-            double range = get_value("c" + QString::number(i) + "r").toDouble();
+            double boundary = 0;
+            int gain = 0;
+            double range = 0;
+
+            if(parse_config({"c" + QString::number(i) + "n",
+                            "c" + QString::number(i) + "pc",
+                            "c" + QString::number(i) + "nc",
+                            "c" + QString::number(i) + "b",
+                            "c" + QString::number(i) + "g",
+                            "c" + QString::number(i) + "r"}))
+            {
+                name = get_value("c" + QString::number(i) + "n");
+
+                p_chan = get_value("c" + QString::number(i) + "pc").toInt();
+                n_chan = get_value("c" + QString::number(i) + "nc").toInt();
+
+                boundary = get_value("c" + QString::number(i) + "b").toDouble();
+                gain = get_value("c" + QString::number(i) + "g").toInt();
+                range = get_value("c" + QString::number(i) + "r").toDouble();
+            }
 
             channel_vec.push_back(new LabjackChannel(name, &handle, p_chan, n_chan, boundary, range, gain));
         }

@@ -2,11 +2,12 @@
 
 #include "LXIClient.h"
 
+#include <float.h>
+
 PSU::PSU(RunManager* runManager, const QString &config)
     : Component(runManager, config)
 {
     load_config(config);
-    assert(parse_config({"name", "vendor", "master", "address", "channel"}));
 
     this->elementName = get_value("name");
     this->vendor = check_vendor(get_value("vendor"));
@@ -150,12 +151,18 @@ void PSU::init()
         }
         else
         {
-            assert(parse_config({"c" + QString::number(i) + "vs", "c" + QString::number(i) + "cs", "c" + QString::number(i) + "vm", "c" + QString::number(i) + "cm"}));
+            double voltage_set = 0;
+            double current_set = 0;
+            double voltage_max = DBL_MAX;
+            double current_max = DBL_MAX;
 
-            double voltage_set = get_value("c" + QString::number(i) + "vs").toDouble();
-            double current_set = get_value("c" + QString::number(i) + "cs").toDouble();
-            double voltage_max = get_value("c" + QString::number(i) + "vm").toDouble();
-            double current_max = get_value("c" + QString::number(i) + "cm").toDouble();
+            if(parse_config({"c" + QString::number(i) + "vs", "c" + QString::number(i) + "cs", "c" + QString::number(i) + "vm", "c" + QString::number(i) + "cm"}))
+            {
+                voltage_set = get_value("c" + QString::number(i) + "vs").toDouble();
+                current_set = get_value("c" + QString::number(i) + "cs").toDouble();
+                voltage_max = get_value("c" + QString::number(i) + "vm").toDouble();
+                current_max = get_value("c" + QString::number(i) + "cm").toDouble();
+            }
 
             channel_vec.push_back(new PSUChannel{i, lxi, vendor, voltage_set, current_set, voltage_max, current_max});
         }

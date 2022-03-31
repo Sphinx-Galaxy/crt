@@ -3,6 +3,7 @@
 #include "src/SubWindow/SubWindow.h"
 
 #include <QGroupBox>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -135,4 +136,12 @@ void WindowTab::load_from_config()
 void WindowTab::layout_updater(SubWindow* sub)
 {
     connect(sub, SIGNAL(layout_done()), this, SLOT(update_layout()));
+}
+
+void WindowTab::handle_parsing_error(const QString& element_name)
+{
+    QMessageBox info(QMessageBox::Icon::Critical,
+                     "Loading " + element_name + " Config",
+                     "Could not parse config file");
+    info.exec();
 }

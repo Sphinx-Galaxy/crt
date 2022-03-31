@@ -37,12 +37,14 @@ public:
 
     void clear_config();
 
+    static bool parse_config(const QString& config, const QVector<QString>& entry_name_vec);
+
 protected:
     QVector<ConfigEntry*> config_entry_vec;
 
     ConfigEntry* get_entry(const QString& name);
 
-    virtual bool parse_config(const QVector<QString>& entry_name_vec);
+    bool parse_config(const QVector<QString>& entry_name_vec);
 };
 
 
