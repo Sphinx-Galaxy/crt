@@ -15,7 +15,7 @@ OSCChannel::OSCChannel(uint number, EthernetClient* eth, enum Vendor vendor) {
     this->vendor = vendor;
 
     update_settings_vendor = select_update_settings_vendor();
-    update_settings_vendor = select_update_values_vendor();
+    update_values_vendor = select_update_values_vendor();
 }
 
 void (OSCChannel::*OSCChannel::select_update_settings_vendor())(void)

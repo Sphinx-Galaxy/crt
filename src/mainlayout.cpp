@@ -88,11 +88,12 @@ QTabWidget* MainLayout::create_window_tabs()
     windowTabs->addTab(new LBJTab(configManager, runManager), "Labjack");
 
     //OSC
-//    windowTabs->addTab(new OSCTab(configManager, runManager), "OSC");
+    windowTabs->addTab(new OSCTab(configManager, runManager), "OSC");
 
     return windowTabs;
 }
 
+// TODO Should be moved to seperate class
 void MainLayout::set_start_button(enum RunMode mode)
 {
     switch(mode)
@@ -111,6 +112,7 @@ void MainLayout::set_start_button(enum RunMode mode)
     }
 }
 
+// TODO Should be moved to seperate class
 void MainLayout::set_stop_button(enum RunMode mode)
 {
     switch(mode)

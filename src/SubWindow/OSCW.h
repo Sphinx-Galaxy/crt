@@ -18,11 +18,11 @@ class OSCW : public SubWindow {
 Q_OBJECT
 
 public:
-    OSCW(RunManager *m_runManager, OSC *osc);
+    OSCW(RunManager* m_runManager, OSC* osc);
     virtual ~OSCW() override;
 
 private:
-    OSC * osc;
+    OSC* osc;
 
     void create_layout() override;
 };

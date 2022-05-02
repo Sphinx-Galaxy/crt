@@ -28,8 +28,8 @@ void OSCTab::create_subwindow_from_dialog() {
 }
 
 void OSCTab::create_add_subwindow_dialog() {
-    addDialog->add_entry("Name", "PSU Links");
-    addDialog->add_entry("Vendor", "Rohde Schwarz");
+    addDialog->add_entry("Name", "OSC 4 Ch");
+    addDialog->add_entry("Vendor", "Rigol");
     addDialog->add_entry("Address", "192.168.3.103:5025");
-    addDialog->add_entry("Channel", "3");
+    addDialog->add_entry("Channel", "4");
 }

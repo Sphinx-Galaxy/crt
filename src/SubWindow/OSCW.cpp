@@ -3,7 +3,7 @@
 #include "src/Components/OSC.h"
 #include "src/Plot/OSCPlot.h"
 
-OSCW::OSCW(RunManager *m_runManager, OSC *osc)
+OSCW::OSCW(RunManager* m_runManager, OSC* osc)
     : SubWindow(m_runManager, osc), osc(osc) {
 
     /* Connect and register signals */
@@ -21,24 +21,24 @@ void OSCW::create_layout() {
     QVBoxLayout *mainVLayout = new QVBoxLayout;
 
     /* Running Mode */
-    QHBoxLayout *modeLayout = new QHBoxLayout;
-    QPushButton *modeRunButton = new QPushButton("Start / Stop");
+    QHBoxLayout* modeLayout = new QHBoxLayout;
+    QPushButton* modeRunButton = new QPushButton("Start / Stop");
 //    connect(modeRunButton, SIGNAL(clicked()), this, osc, SLOT())
     modeLayout->addWidget(modeRunButton);
 
     /* Trigger Mode */
-    QGroupBox *triggerBox = new QGroupBox("Trigger:");
-    QHBoxLayout *triggerButtonLayout = new QHBoxLayout;
+    QGroupBox* triggerBox = new QGroupBox("Trigger:");
+    QHBoxLayout* triggerButtonLayout = new QHBoxLayout;
 
-    QRadioButton *triggerAuto = new QRadioButton("Auto");
+    QRadioButton* triggerAuto = new QRadioButton("Auto");
     triggerButtonLayout->addWidget(triggerAuto);
     //connect(triggerAuto)
 
-    QRadioButton *triggerNormal = new QRadioButton("Normal");
+    QRadioButton* triggerNormal = new QRadioButton("Normal");
     triggerButtonLayout->addWidget(triggerNormal);
     //connect(triggerAuto)
 
-    QRadioButton *triggerSingle = new QRadioButton("Single");
+    QRadioButton* triggerSingle = new QRadioButton("Single");
     triggerButtonLayout->addWidget(triggerSingle);
     //connect(triggerAuto)
 
