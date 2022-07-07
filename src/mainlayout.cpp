@@ -2,6 +2,7 @@
 
 #include "src/Configuration/ConfigManager.h"
 
+#include "detachedwindow.h"
 #include "Tabs/LBJTab.h"
 #include "Tabs/PSUTab.h"
 #include "Tabs/OSCTab.h"
@@ -74,6 +75,9 @@ QToolBar* MainLayout::create_toolbar()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setIconSize(QSize(16, 16));
 
+    detachTestButton = toolbar->addAction("Detach");
+    connect(detachTestButton, SIGNAL(triggered()), this, SLOT(detach_tab()));
+
     return toolbar;
 }
 
@@ -91,6 +95,15 @@ QTabWidget* MainLayout::create_window_tabs()
     windowTabs->addTab(new OSCTab(configManager, runManager), "OSC");
 
     return windowTabs;
+}
+
+void MainLayout::detach_tab(void)
+{
+    DetachedWindow *win = new DetachedWindow(windowTabs,
+                                windowTabs->currentWidget(),
+                                windowTabs->tabText(windowTabs->currentIndex()));
+
+    win->show();
 }
 
 // TODO Should be moved to seperate class

@@ -54,6 +54,7 @@ SOURCES += \
     src/Tabs/OSCTab.cpp \
     src/Tabs/PSUTab.cpp \
     src/mainwindow.cpp \
+    src/detachedwindow.cpp \
     src/Configuration/ConfigElement.cpp \
     src/Configuration/ConfigManager.cpp \
     src/SubWindow/SubWindow.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     src/Tabs/OSCTab.h \
     src/Tabs/PSUTab.h \
     src/mainwindow.h \
+    src/detachedwindow.h \
     src/Configuration/ConfigElement.h \
     src/Configuration/ConfigManager.h \
     src/SubWindow/SubWindow.h \

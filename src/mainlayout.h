@@ -31,6 +31,9 @@ public:
     MainLayout();
     virtual ~MainLayout();
 
+public slots:
+    void detach_tab();
+
 private slots:
     void set_start_button(enum RunMode mode);
     void set_stop_button(enum RunMode mode);
@@ -45,6 +48,7 @@ private:
 
     QAction* startTestButton;
     QAction* stopTestButton;
+    QAction* detachTestButton;
 
     void create_layout();
 
