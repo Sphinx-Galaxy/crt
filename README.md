@@ -18,6 +18,17 @@ In case you don't want to setup stuff by yourself, use the docker file:
 $ docker build -t gsdr Docker
 ```
 
+To start the docker with X11 forwarding:
+
+```
+$ docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
+	-it \
+	--rm \
+	-u sphinx \
+	-e DISPLAY=unix:0 \
+	gsdr
+```
+
 # Build Prerequisites
 
 ## QtCreator
