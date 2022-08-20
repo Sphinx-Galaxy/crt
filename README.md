@@ -21,7 +21,9 @@ $ docker build -t gsdr Docker
 To start the docker with X11 forwarding:
 
 ```
-$ docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
+$ docker run \
+	-v /tmp/.X11-unix:/tmp/.X11-unix \
+	-v /PATH/TO/CRT:/home/sphinx/crt \
 	-it \
 	--rm \
 	-u sphinx \
