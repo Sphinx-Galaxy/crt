@@ -10,6 +10,8 @@ The user manual can be found in the 'doc' folder, it explains the manual use as 
 
 In the 'configs' folder are several configurations from practical radiation test and also a few example configurations. Additionally a python script 'LBJ_to_CRT.py' can be used to generate a labjack configuration from a *.csv file derived from the Labjack_Setup.xlsx.
 
+The program features 'dummy data' which can be enabled and disabled via the 'DUMMY_DATA' flag in the projection configuration file.
+
 # Docker
 
 In case you don't want to setup stuff by yourself, use the docker file:
