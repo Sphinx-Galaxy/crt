@@ -13,7 +13,7 @@ LBJTab::LBJTab(ConfigManager* m_configManager, RunManager* m_runManager)
 
 void LBJTab::push_new_subwindow(const QString& config)
 {
-    if(Labjack::parse_config(config, {"name", "vendor", "con", "id"}) == false)
+    if(Labjack::parse_config(config, {"name", "con", "id", "channel"}))
     {
         LBJW* lbjw = new LBJW(runManager, new Labjack(runManager, config));
         subWindow_list.push_back(lbjw);

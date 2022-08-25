@@ -11,7 +11,7 @@ PSUTab::PSUTab(ConfigManager* m_configManager, RunManager* m_runManager)
 
 void PSUTab::push_new_subwindow(const QString& config)
 {
-    if(PSU::parse_config(config, {"name", "vendor", "address", "channel"}) == false)
+    if(PSU::parse_config(config, {"name", "vendor", "address", "channel"}))
     {
         PSUW* psuw = new PSUW(runManager, new PSU(runManager, config));
         subWindow_list.push_back(psuw);
