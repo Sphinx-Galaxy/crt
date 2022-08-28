@@ -27,7 +27,9 @@ void ConfigElement::load_config(const QString& content)
     }
 }
 
-bool ConfigElement::parse_config(const QString& config, const QVector<QString>& entry_name_vec)
+bool ConfigElement::parse_config(const QString& config,
+                                 const QVector<QString>& entry_name_vec,
+                                 ConfigError* configError)
 {
     bool ok = true;
 
@@ -35,6 +37,10 @@ bool ConfigElement::parse_config(const QString& config, const QVector<QString>& 
     {
         if(config.contains(entry_name) == false)
         {
+            if(configError != nullptr)
+            {
+                configError->name = entry_name;
+            }
             ok &= false;
             break;
         }
@@ -43,7 +49,7 @@ bool ConfigElement::parse_config(const QString& config, const QVector<QString>& 
     return ok;
 }
 
-bool ConfigElement::parse_config(const QVector<QString>& entry_name_vec)
+bool ConfigElement::parse_config(const QVector<QString>& entry_name_vec, ConfigError* configError)
 {
     bool ok = true;
 
@@ -51,6 +57,10 @@ bool ConfigElement::parse_config(const QVector<QString>& entry_name_vec)
     {
         if(get_entry(entry_name) == nullptr)
         {
+            if(configError != nullptr)
+            {
+                configError->name = entry_name;
+            }
             ok &= false;
             break;
         }

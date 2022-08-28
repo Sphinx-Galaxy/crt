@@ -138,10 +138,10 @@ void WindowTab::layout_updater(SubWindow* sub)
     connect(sub, SIGNAL(layout_done()), this, SLOT(update_layout()));
 }
 
-void WindowTab::handle_parsing_error(const QString& element_name)
+void WindowTab::handle_parsing_error(const QString& element_name, const ConfigError* configError)
 {
     QMessageBox info(QMessageBox::Icon::Critical,
                      "Loading " + element_name + " Config",
-                     "Could not parse config file");
+                     "Could not parse config file, unable to find argument \'" + configError->name + "\'");
     info.exec();
 }

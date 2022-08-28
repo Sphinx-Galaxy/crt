@@ -12,6 +12,8 @@
 
 class SubWindow;
 
+struct ConfigError;
+
 class QVBoxLayout;
 
 #include "src/Configuration/ConfigManager.h"
@@ -61,7 +63,7 @@ protected:
     virtual void create_add_subwindow_dialog() = 0;
     void layout_updater(SubWindow* sub);
 
-    void handle_parsing_error(const QString& element_name);
+    void handle_parsing_error(const QString& element_name, const ConfigError* configError);
 };
 
 #endif // WINDOWTAB_H

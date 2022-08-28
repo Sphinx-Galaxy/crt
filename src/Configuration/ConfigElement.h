@@ -19,6 +19,11 @@ struct ConfigEntry
     QString value;
 };
 
+struct ConfigError
+{
+    QString name;
+};
+
 class ConfigElement
 {
 public:
@@ -37,14 +42,16 @@ public:
 
     void clear_config();
 
-    static bool parse_config(const QString& config, const QVector<QString>& entry_name_vec);
+    static bool parse_config(const QString& config,
+                             const QVector<QString>& entry_name_vec,
+                             ConfigError* configError = nullptr);
 
 protected:
     QVector<ConfigEntry*> config_entry_vec;
 
     ConfigEntry* get_entry(const QString& name);
 
-    bool parse_config(const QVector<QString>& entry_name_vec);
+    bool parse_config(const QVector<QString>& entry_name_vec, ConfigError* configError = nullptr);
 };
 
 
