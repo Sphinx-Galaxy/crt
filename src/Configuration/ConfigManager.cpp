@@ -176,15 +176,15 @@ bool ConfigManager::is_defined(const QString& name, int pos)
     bool section_exists = false;
     bool section_defined = false;
 
-    foreach(SectionPosition sec, section_position_vec)
+    for(QVector<SectionPosition>::iterator it = section_position_vec.begin(); it != section_position_vec.end(); it++)
     {
-        if(sec.sectionName == name)
+        if((*it).sectionName == name)
         {
             section_exists = true;
 
-            if(sec.pos < pos)
+            if((*it).pos < pos)
             {
-                sec.pos++;
+                (*it).pos++;
                 section_defined = false;
                 break;
             }
