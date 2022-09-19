@@ -41,8 +41,8 @@ void LBJPlot::update_plot()
         update_time_axis();
 
         /* Set y-axis */
-        int maximum = get_total_limit(true);
-        int minimum = get_total_limit(false);
+        double maximum = get_total_limit(true);
+        double minimum = get_total_limit(false);
 
         plot->yAxis->setRange(minimum, maximum);
 
@@ -108,9 +108,9 @@ void LBJPlot::set_datarate(const QString& datarate)
     counter = 0;
 }
 
-int LBJPlot::get_total_limit(bool maximum)
+double LBJPlot::get_total_limit(bool maximum)
 {
-    int minmax = 0;
+    double minmax = 0;
     for(QVector<PlotElement *>::iterator it = plotElement_list.begin(); it != plotElement_list.end(); ++it)
     {
         if((*it)->is_plotted())

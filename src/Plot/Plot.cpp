@@ -7,7 +7,7 @@ Plot::Plot(QCustomPlot *plot, int datapoints, int seconds)
 {
     for(int i = 0; i < 16; ++i)
     {
-       limits.append(qPow(2, i)*1.1);
+       limits.append(qPow(2, i)*0.01);
     }
 
     realTime = new QElapsedTimer;

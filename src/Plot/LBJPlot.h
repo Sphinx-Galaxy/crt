@@ -41,9 +41,7 @@ private:
 
     QElapsedTimer* plot_timer;
 
-    int get_total_maximum();
-    int get_total_minimum();
-    int get_total_limit(bool maximum);
+    double get_total_limit(bool maximum);
 
     void create_layout() override;
 };
