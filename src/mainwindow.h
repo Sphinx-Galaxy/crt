@@ -21,7 +21,7 @@ public:
 
 private:
     void create_layout();
-
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

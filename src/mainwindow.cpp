@@ -2,6 +2,10 @@
 
 #include "mainlayout.h"
 
+#include <QApplication>
+#include <QCloseEvent>
+#include <QMessageBox>
+
 MainWindow::MainWindow()
 {
     create_layout();
@@ -18,3 +22,13 @@ void MainWindow::create_layout()
     setCentralWidget(new MainLayout);
 }
 
+void MainWindow::closeEvent(QCloseEvent *event) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Quit", "Do you really want to quit?",
+                                    QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        QApplication::quit();
+    } else {
+        event->ignore();
+    }
+}
