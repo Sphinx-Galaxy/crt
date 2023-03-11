@@ -32,17 +32,17 @@ protected:
 
     QCustomPlot* plot;
     QVector<double> timeAxis;
-    QVector<int> limits;
+    QVector<double> limits;
 
     int datapoints, seconds;
     long counter = 0;
 
     virtual void create_layout() = 0;
 
-    virtual int get_maximum(const QVector<double>& data);
-    virtual int get_minimum(const QVector<double>& data);
-    int max_function(const QVector<double>& data, bool compare(int value, int limit));
-    int min_function(const QVector<double>& data, bool compare(int value, int limit));
+    virtual double get_maximum(const QVector<double>& data);
+    virtual double get_minimum(const QVector<double>& data);
+    double max_function(const QVector<double>& data, bool compare(double value, double limit));
+    double min_function(const QVector<double>& data, bool compare(double value, double limit));
     QVector<double> abs_vec(const QVector<double>& vec);
 
     void shift_into_vector(QVector<double>& vector, double value);
@@ -71,36 +71,37 @@ inline QVector<double> Plot::abs_vec(const QVector<double>& vec)
     return absv;
 }
 
-inline int Plot::max_function(const QVector<double>& data, bool compare(int value, int limit))
+inline double Plot::max_function(const QVector<double>& data, bool compare(double value, double limit))
 {
     int pos = -1;
     while(pos < (limits.size()-1) &&
-          compare(limits[++pos], int(*std::max_element(data.begin(), data.end()))));
+          compare(limits[++pos], double(*std::max_element(data.begin(), data.end()))));
 
     return limits[pos];
 }
 
-inline int Plot::min_function(const QVector<double>& data, bool compare(int value, int limit))
+inline double Plot::min_function(const QVector<double>& data, bool compare(double value, double limit))
 {
     int pos = limits.size();
-    while(pos > 0 && compare(limits[--pos], int(*std::min_element(data.begin(), data.end()))));
+    while(pos > 0 && compare(limits[--pos], double(*std::min_element(data.begin(), data.end()))));
 
     return limits[pos];
 }
 
-inline int Plot::get_maximum(const QVector<double>& data)
+
+inline double Plot::get_maximum(const QVector<double>& data)
 {
-    return max_function(data, [](int value, int limit) {return value < 1.1*limit;});
+    return max_function(data, [](double value, double limit) {return value < 1.1*limit;});
 }
 
-inline int Plot::get_minimum(const QVector<double> &data)
+inline double Plot::get_minimum(const QVector<double> &data)
 {
-    if(*std::min_element(data.begin(), data.end()) > 0)
+    if(*std::min_element(data.begin(), data.end()) > 0.0)
     {
-        return min_function(data, [](int value, int limit){return limit < 0.9*value;});
+        return min_function(data, [](double value, double limit){return limit < 0.9*value;});
     }
 
-    return -max_function(abs_vec(data), [](int value, int limit){return value < 1.1*limit;});
+    return -max_function(abs_vec(data), [](double value, double limit){return value < 1.1*limit;});
 }
 
 inline void Plot::update_time_axis()

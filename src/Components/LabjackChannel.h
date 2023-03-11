@@ -24,7 +24,7 @@ public:
                    int n_chan,
                    double boundary = 0,
                    double range = 10,
-                   int gain = 1);
+                   double virtual_gain = 1);
 
     virtual ~LabjackChannel() override;
 
@@ -148,7 +148,7 @@ private:
     int p_chan, n_chan;
     double boundary, range;
     int range_index;
-    int virtual_gain;
+    double virtual_gain;
     bool is_input, is_differential;
     double value = 0.0;
 
@@ -207,7 +207,7 @@ inline void LabjackChannel::set_boundary(const QString& text) {
 }
 
 inline void LabjackChannel::set_virtual_gain(const QString& text) {
-    virtual_gain = text.toInt();
+    virtual_gain = text.toDouble();
 }
 
 inline void LabjackChannel::set_resolution(uint index) {

@@ -9,14 +9,14 @@ LabjackChannel::LabjackChannel(QString const& name,
                                int n_chan,
                                double boundary,
                                double range,
-                               int gain)
+                               double virtual_gain)
     : name(name),
       handle(handle),
       p_chan(p_chan),
       n_chan(n_chan),
       boundary(boundary),
       range(range),
-      virtual_gain(gain)
+      virtual_gain(virtual_gain)
 {
     this->is_input = true;
 

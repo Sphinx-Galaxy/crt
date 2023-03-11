@@ -58,9 +58,9 @@ void LBJW::create_layout()
     topLineLayout->addWidget(new QLabel("Datarate [S/s]:"));
     topLineLayout->addWidget(datarateLine);
 
-    QLineEdit* currentDatarateLine = new QLineEdit;
+    QLabel* currentDatarateLine = new QLabel;
     currentDatarateLine->setText(QString::number(1));
-    currentDatarateLine->setReadOnly(true);
+    currentDatarateLine->setMinimumWidth(40);
     connect(lbj, SIGNAL(samplerate_changed(const QString &)), currentDatarateLine, SLOT(setText(const QString &)));
     topLineLayout->addWidget(new QLabel("/"));
     topLineLayout->addWidget(currentDatarateLine);
@@ -121,8 +121,8 @@ void LBJW::create_layout()
         connect(boundaryLine, SIGNAL(textChanged(const QString &)), channel, SLOT(set_boundary(const QString &)));
 
         /* Value */
-        QLineEdit *valueLine = new QLineEdit(QString::number(channel->get_value()));
-        valueLine->setReadOnly(true);
+        QLabel *valueLine = new QLabel(QString::number(channel->get_value()));
+        valueLine->setMinimumWidth(100);
         connect(timer, SIGNAL(timeout()), channel, SLOT(refresh_value()));
         connect(channel, SIGNAL(value_refreshed(const QString &)), valueLine, SLOT(setText(const QString &)));
 
@@ -139,9 +139,9 @@ void LBJW::create_layout()
         rangeSlide->setValue(channel->get_range_index());
         connect(rangeSlide, SIGNAL(valueChanged(int)), channel, SLOT(set_range(int)));
 
-        QLineEdit* rangeLine = new QLineEdit(QString::number(channel->get_gain()));
+        QLabel* rangeLine = new QLabel(QString::number(channel->get_gain()));
         rangeLine->setText(QString::number(channel->get_range()));
-        rangeLine->setReadOnly(true);
+        rangeLine->setMinimumWidth(20);
         connect(channel, SIGNAL(range_changed(const QString&)), rangeLine, SLOT(setText(const QString &)));
 
         rangeLayout->addWidget(rangeSlide);
@@ -151,7 +151,7 @@ void LBJW::create_layout()
         QCheckBox* graphCheckBox = new QCheckBox;
         graphCheckBox->setStyleSheet("color: " + color_list[cnt%color_list.size()].name + " ;");
         lbjplot->add_channel(channel, color_list[cnt%color_list.size()].color);
-        connect(graphCheckBox, SIGNAL(stateChanged(int)), lbjplot->get_plotelement_list().last(), SLOT(set_plot_active(int)));        
+        connect(graphCheckBox, SIGNAL(stateChanged(int)), lbjplot->get_plotelement_list().last(), SLOT(set_plot_active(int)));
 
         channelLayout->addWidget(channelLabel, cnt, 0);
         channelLayout->addWidget(boundaryLine, cnt, 1);

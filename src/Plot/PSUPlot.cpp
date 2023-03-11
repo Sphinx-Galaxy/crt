@@ -29,16 +29,16 @@ void PSUPlot::update_plot()
 
     update_time_axis();
 
-    int max_voltage = get_maximum(voltage_axis);
+    double max_voltage = get_maximum(voltage_axis);
     max_voltage = max_voltage > channel->get_voltage_max() ? ceil(channel->get_voltage_max()) : max_voltage;
     max_voltage = max_voltage < 4 ? 4 : max_voltage;
 
-    int max_current = get_maximum(current_axis);
+    double max_current = get_maximum(current_axis);
     max_current = max_current > channel->get_current_max() ? ceil(channel->get_current_max()) : max_current;
     max_current = max_current < 10 ? 10 : max_current;
 
     plot->yAxis->setRange(0, max_voltage);
-    plot->yAxis2->setRange(0,max_current);
+    plot->yAxis2->setRange(0, max_current);
 
     plot->graph(0)->setData(timeAxis, voltage_axis);
     plot->graph(1)->setData(timeAxis, current_axis);
