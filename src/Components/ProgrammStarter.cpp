@@ -16,17 +16,21 @@ ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString &config)
     restart = get_value("restart") == "true";
 }
 
-ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path)
+ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path, const QString& arguments)
     : Component(runManager, m_element_name), path(path)
 {
     this->elementName = m_element_name;
 
-    arguments = QStringList("$directory");
+    set_arguments(arguments);
 }
 
 ProgrammStarter::~ProgrammStarter()
 {
-    delete process;
+    if (process) {
+        process->kill();
+        QMetaObject::invokeMethod(process, "deleteLater");
+        process = NULL;
+    }
 }
 
 void ProgrammStarter::set_config()
@@ -177,7 +181,7 @@ QStringList ProgrammStarter::substitute_arguments()
     {
         if(element.contains("$directory"))
         {
-            QString suffix = element.mid(element.indexOf("/"));
+            QString suffix = element.mid(element.indexOf(QDir::separator()));
             argList.push_back(runManager->get_root_directory() + suffix);
         }
         else

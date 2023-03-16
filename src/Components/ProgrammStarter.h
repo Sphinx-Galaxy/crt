@@ -20,7 +20,7 @@ Q_OBJECT
 
 public:
     ProgrammStarter(RunManager* runManager, const QString& config);
-    ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path);
+    ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path, const QString& arguments);
     virtual ~ProgrammStarter();
 
     QString get_path() const
