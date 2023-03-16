@@ -39,6 +39,7 @@ public slots:
     void set_arguments(const QString &text);
     void set_path(const QString &text);
     void set_trigger(int trigger);
+    void set_restart(bool restart) {this->restart = restart;};
 
     void start_programm();
     void stop_programm();

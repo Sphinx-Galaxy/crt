@@ -13,6 +13,7 @@ ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString &config)
     this->elementName = get_value("name");
     path = get_value("path");
     set_arguments(get_value("arguments"));
+    restart = get_value("restart") == "true";
 }
 
 ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path)
@@ -35,6 +36,7 @@ void ProgrammStarter::set_config()
     set_value("name", elementName);
     set_value("path", path);
     set_value("arguments", get_arguments());
+    set_value("restart", restart ? "true" : "false");
 }
 
 void ProgrammStarter::init()

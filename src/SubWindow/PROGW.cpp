@@ -42,6 +42,12 @@ void PROGW::create_layout()
     connect(trigger, SIGNAL(stateChanged(int)), programmStarter, SLOT(set_trigger(int)));
     connect(programmStarter, SIGNAL(announce_shouldrun(bool)), trigger, SLOT(setDisabled(bool)));
 
+    QCheckBox* restart = new QCheckBox("Restart");
+    restart->setChecked(true);
+    restart->setToolTip("Restart program automatically after 10 seconds.");
+    connect(restart, &QCheckBox::stateChanged, programmStarter, &ProgrammStarter::set_restart);
+    connect(programmStarter, &ProgrammStarter::announce_shouldrun, restart, &QCheckBox::setDisabled);
+
     /* Permanent Logging */
     QCheckBox* permanentLogging = new QCheckBox("Permanent Logging");
     permanentLogging->setDisabled(!runManager->is_valid());
@@ -63,6 +69,7 @@ void PROGW::create_layout()
     QSpacerItem* space = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     optionLayout->addWidget(trigger);
+    optionLayout->addWidget(restart);
     optionLayout->addWidget(startButton);
     optionLayout->addWidget(stopButton);
     optionLayout->addSpacerItem(space);
