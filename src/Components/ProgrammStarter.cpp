@@ -1,8 +1,8 @@
 #include "ProgrammStarter.h"
 
 #include <QFileDialog>
-#include <QProcess>
-#include <QThread>
+#include <QTimer>
+#include <QVariant>
 
 ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString &config)
     : Component(runManager, config)
@@ -43,13 +43,20 @@ void ProgrammStarter::init()
 
     connect(process, SIGNAL(readyRead()), this, SLOT(receive_data()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handle_finished_process()));
+    connect(process, &QProcess::started, this, &ProgrammStarter::handle_started_process);
+    connect(process, &QProcess::errorOccurred, this, &ProgrammStarter::handle_error_process);
+
+    timer_restart = new QTimer(this);
+    timer_restart->setSingleShot(true);
+    connect(timer_restart, &QTimer::timeout, this, &ProgrammStarter::execute_programm);
+
 
     emit init_done();
 }
 
 void ProgrammStarter::set_path(const QString& text)
 {
-    if(!running && QFileInfo::exists(text))
+    if (!shouldrun && QFileInfo::exists(text))
     {
         path = text;
         emit announce_path(path);
@@ -58,7 +65,7 @@ void ProgrammStarter::set_path(const QString& text)
 
 void ProgrammStarter::set_trigger(int trigger)
 {
-    if(!running)
+    if (!shouldrun)
     {
         this->trigger = trigger > 0 ? true : false;
 
@@ -68,44 +75,71 @@ void ProgrammStarter::set_trigger(int trigger)
 
 void ProgrammStarter::execute_programm()
 {
-    if(!running)
-    {
+    if (process->state() == QProcess::ProcessState::NotRunning) {
+
+        qDebug("execute_programm `%s %s` ",
+            path.toLocal8Bit().data(),
+            substitute_arguments().join(" ").toLocal8Bit().data());
+
+        start_logging();
+
         process->start(path, substitute_arguments());
-        process->waitForStarted();
 
-        running = true;
-
-        emit announce_run(true);
+        shouldrun = true;
+        emit announce_shouldrun(true);
+    } else {
+        qDebug("execute_programm already running");
     }
 }
 
 void ProgrammStarter::kill_programm()
 {
-    if(running)
-    {
-        running = false;
+    timer_restart->stop();
 
+    if (shouldrun) {
         process->kill();
-
         stop_logging();
 
-        emit announce_run(false);
+        shouldrun = false;
+        emit announce_shouldrun(false);
     }
+}
+
+void ProgrammStarter::handle_started_process()
+{
+    qDebug("handle_started_process");
+
+    emit announce_run(true);
+}
+
+void ProgrammStarter::handle_error_process(QProcess::ProcessError error)
+{
+    QString errstr = QVariant::fromValue(error).toString();
+    qDebug("handle_error_process %d : %s", error, errstr.toLocal8Bit().data());
+
+    emit data_available(QString("\nerror %1 : %2\n").arg(error).arg(errstr));
+
+    kill_programm();
 }
 
 void ProgrammStarter::handle_finished_process()
 {
-    if(running)
-    {
-        //Stop process (once and for all)
-        kill_programm();
+    qDebug("handle_finished_process");
 
-        //Wait
-        QThread::sleep(30);
 
-        //Start process and logging (again)
-        execute_programm();
-        start_logging();
+    receive_data();
+
+    emit data_available(QString("\nexited with code %1\n").arg(process->exitCode()));
+
+    //Stop process (once and for all)
+    process->kill();
+    stop_logging();
+
+    emit announce_run(false);
+
+    if ((shouldrun) && (restart)) {
+        emit announce_shouldrun(true);
+        timer_restart->start(10000);
     }
 }
 

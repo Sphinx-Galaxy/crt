@@ -9,7 +9,8 @@
  *
  */
 
-class QProcess;
+#include <QProcess>
+class QTimer;
 
 #include "Component.h"
 
@@ -47,7 +48,9 @@ public slots:
 
 private slots:
     void receive_data();
+    void handle_started_process();
     void handle_finished_process();
+    void handle_error_process(QProcess::ProcessError error);
 
 signals:
     void data_available(const QString &);
@@ -56,14 +59,17 @@ signals:
 
     void announce_trigger(bool);
     void announce_run(bool);
+    void announce_shouldrun(bool);
     void announce_path(const QString &);
 
 private:
     QProcess* process;
+    QTimer *timer_restart;
 
     QString path;
     QStringList arguments;
-    bool running = false;
+    bool shouldrun = false;
+    bool restart = true;
     bool trigger = false;
 
     QStringList generate_header() override;
