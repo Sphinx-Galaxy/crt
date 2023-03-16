@@ -46,6 +46,7 @@ void ProgrammStarter::set_config()
 void ProgrammStarter::init()
 {
     process = new QProcess;
+    process->setProcessChannelMode(QProcess::MergedChannels);
 
     connect(process, SIGNAL(readyRead()), this, SLOT(receive_data()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handle_finished_process()));
