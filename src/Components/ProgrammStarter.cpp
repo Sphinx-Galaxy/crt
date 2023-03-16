@@ -185,8 +185,7 @@ QStringList ProgrammStarter::substitute_arguments()
             QString suffix = element.mid(element.indexOf(QDir::separator()));
             argList.push_back(runManager->get_root_directory() + suffix);
         }
-        else
-        {
+        else if (!element.isEmpty()) {
             argList.push_back(element);
         }
     }
