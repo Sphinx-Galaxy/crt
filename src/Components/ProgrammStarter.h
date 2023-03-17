@@ -40,6 +40,8 @@ public slots:
     void set_path(const QString &text);
     void set_trigger(int trigger);
     void set_restart(bool restart) {this->restart = restart;};
+    void set_restartwait(int value) {restart_wait = value;};
+    int  get_restartwait() {return restart_wait;};
 
     void start_programm();
     void stop_programm();
@@ -72,6 +74,7 @@ private:
     bool shouldrun = false;
     bool restart = true;
     bool trigger = false;
+    int restart_wait = 10;
 
     QStringList generate_header() override;
 

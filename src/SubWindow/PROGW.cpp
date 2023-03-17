@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QTextEdit>
+#include <QSpinBox>
 #include <QVBoxLayout>
 
 PROGW::PROGW(RunManager* m_runManager, ProgrammStarter* programmStarter)
@@ -42,11 +43,20 @@ void PROGW::create_layout()
     connect(trigger, SIGNAL(stateChanged(int)), programmStarter, SLOT(set_trigger(int)));
     connect(programmStarter, SIGNAL(announce_shouldrun(bool)), trigger, SLOT(setDisabled(bool)));
 
-    QCheckBox* restart = new QCheckBox("Restart");
-    restart->setChecked(true);
-    restart->setToolTip("Restart program automatically after 10 seconds.");
-    connect(restart, &QCheckBox::stateChanged, programmStarter, &ProgrammStarter::set_restart);
-    connect(programmStarter, &ProgrammStarter::announce_shouldrun, restart, &QCheckBox::setDisabled);
+    auto restartCheckbox = new QCheckBox("Restart");
+    restartCheckbox->setChecked(true);
+    restartCheckbox->setToolTip("Restart program automatically after 10 seconds.");
+    connect(restartCheckbox, &QCheckBox::stateChanged, programmStarter, &ProgrammStarter::set_restart);
+    connect(programmStarter, &ProgrammStarter::announce_shouldrun, restartCheckbox, &QCheckBox::setDisabled);
+
+    auto restartWaitInput = new QSpinBox(this);
+    restartWaitInput->setValue(programmStarter->get_restartwait());
+    restartWaitInput->setMinimum(0);
+    restartWaitInput->setToolTip("Restart delay in seconds");
+    restartWaitInput->setSuffix(" s");
+    restartWaitInput->setMinimumWidth(75);
+    connect(restartCheckbox, &QCheckBox::stateChanged, restartWaitInput, &QSpinBox::setVisible);
+    connect(restartWaitInput, QOverload<int>::of(&QSpinBox::valueChanged), programmStarter, &ProgrammStarter::set_restartwait);
 
     /* Permanent Logging */
     QCheckBox* permanentLogging = new QCheckBox("Permanent Logging");
@@ -69,7 +79,8 @@ void PROGW::create_layout()
     QSpacerItem* space = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     optionLayout->addWidget(trigger);
-    optionLayout->addWidget(restart);
+    optionLayout->addWidget(restartCheckbox);
+    optionLayout->addWidget(restartWaitInput);
     optionLayout->addWidget(startButton);
     optionLayout->addWidget(stopButton);
     optionLayout->addSpacerItem(space);

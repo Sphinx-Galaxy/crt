@@ -13,7 +13,8 @@ ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString &config)
     this->elementName = get_value("name");
     path = get_value("path");
     set_arguments(get_value("arguments"));
-    restart = get_value("restart") == "true";
+    restart = get_value("restart", "") == "true";
+    restart_wait = get_value("restart_wait", "10").toInt();
 }
 
 ProgrammStarter::ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path, const QString& arguments)
@@ -41,6 +42,7 @@ void ProgrammStarter::set_config()
     set_value("path", path);
     set_value("arguments", get_arguments());
     set_value("restart", restart ? "true" : "false");
+    set_value("restart_wait", QString::number(restart_wait));
 }
 
 void ProgrammStarter::init()
@@ -146,7 +148,7 @@ void ProgrammStarter::handle_finished_process()
 
     if ((shouldrun) && (restart)) {
         emit announce_shouldrun(true);
-        timer_restart->start(10000);
+        timer_restart->start(restart_wait * 1000);
     }
 }
 
