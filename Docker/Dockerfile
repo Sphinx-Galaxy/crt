@@ -7,8 +7,8 @@ RUN apt-get install build-essential cmake git liblxi-dev make pkgconf qt5-qmake 
 RUN useradd -m sphinx && echo sphinx:sphinx | chpasswd && usermod -aG sudo sphinx
 ###
 
-RUN wget https://labjack.com/sites/default/files/software/labjack_ljm_software_2019_07_16_x86_64.tar.gz
-RUN tar -xzf labjack_ljm_software_2019_07_16_x86_64.tar.gz
+RUN wget https://cdn.docsie.io/file/workspace_u4AEu22YJT50zKF8J/doc_VDWGWsJAhd453cYSI/boo_9BFzMKFachlhscG9Z/file_6ct0vbMEidvixvYCA/labjack_ljm_software_2019_07_16_x86_64tar.gz
+RUN tar -xzf labjack_ljm_software_2019_07_16_x86_64tar.gz
 RUN labjack_ljm_software_2019_07_16_x86_64/labjack_ljm_installer.run
 RUN rm -r labjack*
 
