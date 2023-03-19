@@ -5,6 +5,7 @@
 #include "detachedwindow.h"
 #include "Tabs/LBJTab.h"
 #include "Tabs/PSUTab.h"
+#include "Tabs/OSCTab.h"
 #include "Tabs/PROGTab.h"
 
 #include <QScrollArea>
@@ -90,6 +91,9 @@ QTabWidget* MainLayout::create_window_tabs()
 
     //Labjack
     windowTabs->addTab(new LBJTab(configManager, runManager), "Labjack");
+
+    //OSC
+    windowTabs->addTab(new OSCTab(configManager, runManager), "OSC");
 
     //Prog
     windowTabs->addTab(new PROGTab(configManager, runManager), "Prog");
