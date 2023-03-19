@@ -31,8 +31,6 @@ SOURCES += \
     src/Components/LXIClient.cpp \
     src/Components/Labjack.cpp \
     src/Components/LabjackChannel.cpp \
-    src/Components/OSC.cpp \
-    src/Components/OSCChannel.cpp \
     src/Components/ProgrammStarter.cpp \
     src/Components/PSU.cpp \
     src/Components/PSUChannel.cpp \
@@ -49,11 +47,9 @@ SOURCES += \
     src/Plot/Plot.cpp \
     src/Plot/qcustomplot.cpp \
     src/SubWindow/LBJW.cpp \
-    src/SubWindow/OSCW.cpp \
     src/SubWindow/PROGW.cpp \
     src/SubWindow/PSUW.cpp \
     src/Tabs/LBJTab.cpp \
-    src/Tabs/OSCTab.cpp \
     src/Tabs/PROGTab.cpp \
     src/Tabs/PSUTab.cpp \
     src/mainwindow.cpp \
@@ -71,8 +67,6 @@ HEADERS += \
     src/Components/LXIClient.h \
     src/Components/Labjack.h \
     src/Components/LabjackChannel.h \
-    src/Components/OSC.h \
-    src/Components/OSCChannel.h \
     src/Components/ProgrammStarter.h \
     src/Components/PSU.h \
     src/Components/PSUChannel.h \
@@ -89,11 +83,9 @@ HEADERS += \
     src/Plot/Plot.h \
     src/Plot/qcustomplot.h \
     src/SubWindow/LBJW.h \
-    src/SubWindow/OSCW.h \
     src/SubWindow/PROGW.h \
     src/SubWindow/PSUW.h \
     src/Tabs/LBJTab.h \
-    src/Tabs/OSCTab.h \
     src/Tabs/PROGTab.h \
     src/Tabs/PSUTab.h \
     src/mainwindow.h \
