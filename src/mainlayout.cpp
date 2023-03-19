@@ -4,6 +4,7 @@
 
 #include "detachedwindow.h"
 #include "Tabs/LBJTab.h"
+#include "Tabs/SEQTab.h"
 #include "Tabs/PSUTab.h"
 #include "Tabs/OSCTab.h"
 #include "Tabs/PROGTab.h"
@@ -97,6 +98,9 @@ QTabWidget* MainLayout::create_window_tabs()
 
     //Prog
     windowTabs->addTab(new PROGTab(configManager, runManager), "Prog");
+
+    //Seq
+    windowTabs->addTab(new SEQTab(configManager, runManager), "SEQ");
 
     return windowTabs;
 }

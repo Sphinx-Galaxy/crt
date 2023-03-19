@@ -36,10 +36,12 @@ SOURCES += \
     src/Components/ProgrammStarter.cpp \
     src/Components/PSU.cpp \
     src/Components/PSUChannel.cpp \
+    src/Components/Sequencer.cpp \
     src/GraphElements/ComponentDialog.cpp \
     src/GraphElements/IndicatorBox.cpp \
     src/GraphElements/IndicatorIcon.cpp \
     src/GraphElements/SignalDialog.cpp \
+    src/GraphElements/TaskDialog.cpp \
     src/Manager/EventManager.cpp \
     src/Manager/FileManager.cpp \
     src/Manager/RunManager.cpp \
@@ -52,10 +54,12 @@ SOURCES += \
     src/SubWindow/OSCW.cpp \
     src/SubWindow/PROGW.cpp \
     src/SubWindow/PSUW.cpp \
+    src/SubWindow/SEQW.cpp \
     src/Tabs/LBJTab.cpp \
     src/Tabs/OSCTab.cpp \
     src/Tabs/PROGTab.cpp \
     src/Tabs/PSUTab.cpp \
+    src/Tabs/SEQTab.cpp \
     src/mainwindow.cpp \
     src/detachedwindow.cpp \
     src/Configuration/ConfigElement.cpp \
@@ -76,10 +80,12 @@ HEADERS += \
     src/Components/ProgrammStarter.h \
     src/Components/PSU.h \
     src/Components/PSUChannel.h \
+    src/Components/Sequencer.h \
     src/GraphElements/ComponentDialog.h \
     src/GraphElements/IndicatorBox.h \
     src/GraphElements/IndicatorIcon.h \
     src/GraphElements/SignalDialog.h \
+    src/GraphElements/TaskDialog.h \
     src/Manager/EventManager.h \
     src/Manager/FileManager.h \
     src/Manager/RunManager.h \
@@ -92,10 +98,12 @@ HEADERS += \
     src/SubWindow/OSCW.h \
     src/SubWindow/PROGW.h \
     src/SubWindow/PSUW.h \
+    src/SubWindow/SEQW.h \
     src/Tabs/LBJTab.h \
     src/Tabs/OSCTab.h \
     src/Tabs/PROGTab.h \
     src/Tabs/PSUTab.h \
+    src/Tabs/SEQTab.h \
     src/mainwindow.h \
     src/detachedwindow.h \
     src/Configuration/ConfigElement.h \
