@@ -6,6 +6,7 @@
 #include "Tabs/LBJTab.h"
 #include "Tabs/PSUTab.h"
 #include "Tabs/OSCTab.h"
+#include "Tabs/PROGTab.h"
 
 #include <QScrollArea>
 #include <QTabWidget>
@@ -93,6 +94,9 @@ QTabWidget* MainLayout::create_window_tabs()
 
     //OSC
     windowTabs->addTab(new OSCTab(configManager, runManager), "OSC");
+
+    //Prog
+    windowTabs->addTab(new PROGTab(configManager, runManager), "Prog");
 
     return windowTabs;
 }
