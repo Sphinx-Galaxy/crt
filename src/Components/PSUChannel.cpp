@@ -176,12 +176,12 @@ void PSUChannel::update_none()
 
 void PSUChannel::meas_voltage_none()
 {
-    //voltage_meas = voltage_set + double(QRandomGenerator::global()->bounded(-qint16(100), qint16(100))) / double(200);
-    voltage_meas = voltage_meas < 0 ? 0 : voltage_meas;
+    voltage_meas = voltage_set + double(QRandomGenerator::global()->bounded(-qint16(100), qint16(100))) / double(200);
+    voltage_meas = voltage_meas < 0 || !enable ? 0 : voltage_meas;
 }
 
 void PSUChannel::meas_current_none()
 {
-    //current_meas = (current_set/2) * (double(QRandomGenerator::global()->bounded(qint16(80), qint16(120))) / double(100));
+    current_meas = (current_set/2) * (double(QRandomGenerator::global()->bounded(qint16(80), qint16(120))) / double(100));
     current_meas = current_meas < 0 || !enable ? 0 : current_meas;
 }
