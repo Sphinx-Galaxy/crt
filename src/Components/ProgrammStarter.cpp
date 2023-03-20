@@ -146,7 +146,12 @@ void ProgrammStarter::handle_finished_process()
 
     emit announce_run(false);
 
-    if ((shouldrun) && (restart)) {
+    if (!restart) {
+        shouldrun = false;
+        emit announce_shouldrun(false);
+    }
+
+    if (shouldrun) {
         emit announce_shouldrun(true);
         timer_restart->start(restart_wait * 1000);
     }
