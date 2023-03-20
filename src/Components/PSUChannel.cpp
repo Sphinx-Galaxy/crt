@@ -2,10 +2,8 @@
 
 #include "LXIClient.h"
 
-#ifdef DUMMY_DATA
 #include <QRandomGenerator>
 #include <QtMath>
-#endif
 
 PSUChannel::PSUChannel(uint number,
                        LXIClient* lxi,
