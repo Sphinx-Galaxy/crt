@@ -31,7 +31,7 @@ public:
     virtual ~ConfigElement();
 
     QString get_config();
-    QString get_value(const QString& name);
+    QString get_value(const QString& name, const QString& defaultvalue = "");
 
     void set_value(const QString& name, const QString& value);
     virtual void set_config() = 0;

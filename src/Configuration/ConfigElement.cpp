@@ -81,9 +81,9 @@ QString ConfigElement::get_config()
     return config;
 }
 
-QString ConfigElement::get_value(const QString& name)
+QString ConfigElement::get_value(const QString& name, const QString& defaultvalue)
 {
-    return (get_entry(name) != nullptr) ? get_entry(name)->value : "";
+    return (get_entry(name) != nullptr) ? get_entry(name)->value : defaultvalue;
 }
 
 void ConfigElement::set_value(const QString& name, const QString& value)
