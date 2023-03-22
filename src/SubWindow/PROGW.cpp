@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QTextEdit>
+#include <QSpinBox>
 #include <QVBoxLayout>
 
 PROGW::PROGW(RunManager* m_runManager, ProgrammStarter* programmStarter)
@@ -38,8 +39,24 @@ void PROGW::create_layout()
 
     /* Trigger */
     QCheckBox* trigger = new QCheckBox("Auto");
+    trigger->setToolTip("Start on 'start-test' or by sequencer");
     connect(trigger, SIGNAL(stateChanged(int)), programmStarter, SLOT(set_trigger(int)));
-    connect(programmStarter, SIGNAL(announce_run(bool)), trigger, SLOT(setDisabled(bool)));
+    connect(programmStarter, SIGNAL(announce_shouldrun(bool)), trigger, SLOT(setDisabled(bool)));
+
+    auto restartCheckbox = new QCheckBox("Restart");
+    restartCheckbox->setChecked(true);
+    restartCheckbox->setToolTip("Restart program automatically after 10 seconds.");
+    connect(restartCheckbox, &QCheckBox::stateChanged, programmStarter, &ProgrammStarter::set_restart);
+    connect(programmStarter, &ProgrammStarter::announce_shouldrun, restartCheckbox, &QCheckBox::setDisabled);
+
+    auto restartWaitInput = new QSpinBox(this);
+    restartWaitInput->setValue(programmStarter->get_restartwait());
+    restartWaitInput->setMinimum(0);
+    restartWaitInput->setToolTip("Restart delay in seconds");
+    restartWaitInput->setSuffix(" s");
+    restartWaitInput->setMinimumWidth(75);
+    connect(restartCheckbox, &QCheckBox::stateChanged, restartWaitInput, &QSpinBox::setVisible);
+    connect(restartWaitInput, QOverload<int>::of(&QSpinBox::valueChanged), programmStarter, &ProgrammStarter::set_restartwait);
 
     /* Permanent Logging */
     QCheckBox* permanentLogging = new QCheckBox("Permanent Logging");
@@ -52,6 +69,7 @@ void PROGW::create_layout()
     QPushButton* startButton = new QPushButton("Start");
     connect(startButton, SIGNAL(clicked()), programmStarter, SLOT(execute_programm()));
     connect(programmStarter, SIGNAL(announce_trigger(bool)), startButton, SLOT(setDisabled(bool)));
+    connect(programmStarter, SIGNAL(announce_shouldrun(bool)), startButton, SLOT(setDisabled(bool)));
 
     QPushButton* stopButton = new QPushButton("Stop");
     connect(stopButton, SIGNAL(clicked()), programmStarter, SLOT(kill_programm()));
@@ -61,6 +79,8 @@ void PROGW::create_layout()
     QSpacerItem* space = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     optionLayout->addWidget(trigger);
+    optionLayout->addWidget(restartCheckbox);
+    optionLayout->addWidget(restartWaitInput);
     optionLayout->addWidget(startButton);
     optionLayout->addWidget(stopButton);
     optionLayout->addSpacerItem(space);
@@ -85,8 +105,8 @@ void PROGW::create_layout()
     /* Arguments */
     QLineEdit* arguments = new QLineEdit;
     arguments->setText(programmStarter->get_arguments());
-    connect(runManager, SIGNAL(isRunning_changed(bool)), arguments, SLOT(setDisabled(bool)));
     connect(arguments, SIGNAL(textChanged(const QString&)), programmStarter, SLOT(set_arguments(const QString&)));
+    connect(programmStarter, SIGNAL(announce_run(bool)), arguments, SLOT(setDisabled(bool)));
 
     pathLayout->addWidget(setPath);
     pathLayout->addWidget(programmPath);

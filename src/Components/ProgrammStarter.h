@@ -9,7 +9,8 @@
  *
  */
 
-class QProcess;
+#include <QProcess>
+class QTimer;
 
 #include "Component.h"
 
@@ -19,7 +20,7 @@ Q_OBJECT
 
 public:
     ProgrammStarter(RunManager* runManager, const QString& config);
-    ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path);
+    ProgrammStarter(RunManager* runManager, const QString& m_element_name, const QString& path, const QString& arguments);
     virtual ~ProgrammStarter();
 
     QString get_path() const
@@ -38,6 +39,9 @@ public slots:
     void set_arguments(const QString &text);
     void set_path(const QString &text);
     void set_trigger(int trigger);
+    void set_restart(bool restart) {this->restart = restart;};
+    void set_restartwait(int value) {restart_wait = value;};
+    int  get_restartwait() {return restart_wait;};
 
     void start_programm();
     void stop_programm();
@@ -47,7 +51,9 @@ public slots:
 
 private slots:
     void receive_data();
+    void handle_started_process();
     void handle_finished_process();
+    void handle_error_process(QProcess::ProcessError error);
 
 signals:
     void data_available(const QString &);
@@ -56,15 +62,19 @@ signals:
 
     void announce_trigger(bool);
     void announce_run(bool);
+    void announce_shouldrun(bool);
     void announce_path(const QString &);
 
 private:
     QProcess* process;
+    QTimer *timer_restart;
 
     QString path;
     QStringList arguments;
-    bool running = false;
+    bool shouldrun = false;
+    bool restart = true;
     bool trigger = false;
+    int restart_wait = 10;
 
     QStringList generate_header() override;
 
