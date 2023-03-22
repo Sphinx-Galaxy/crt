@@ -42,7 +42,6 @@ SOURCES += \
     src/Manager/FileManager.cpp \
     src/Manager/RunManager.cpp \
     src/Plot/LBJPlot.cpp \
-    src/Plot/OSCPlot.cpp \
     src/Plot/PSUPlot.cpp \
     src/Plot/Plot.cpp \
     src/Plot/qcustomplot.cpp \
@@ -78,7 +77,6 @@ HEADERS += \
     src/Manager/FileManager.h \
     src/Manager/RunManager.h \
     src/Plot/LBJPlot.h \
-    src/Plot/OSCPlot.h \
     src/Plot/PSUPlot.h \
     src/Plot/Plot.h \
     src/Plot/qcustomplot.h \
